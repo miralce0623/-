@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<title></title>
+	</head>
+	<body>
+			
+            <div class="yanzhen">
+            <div class="yanzhen_left" onclick="closeWin();"></div>
+            <div class="yanzhen_mid">支付</div>
+            </div>
+            <div class="gengduo"><em class="huise">敬献留言</em>(本次敬献共需200个铜板)</div>
+            <textarea name="" cols="" rows="" class="duowenben juli"></textarea>	
+            <a href="#" class="xiayibu2">使用个人账户支付  余额0铜板</a>
+             <a href="#" class="xiayibu2">使用公共账户支付  余额500铜板</a>
+	<script>
+	function closeWin() {
+		api.closeWin();
+	}
+	function wx_pay()
+	{
+        api.ajax(
+        {
+                url : "http://www.ganhuai.net/json/transaction.php",
+                method : 'POST',
+                timeout : '30',
+                dataType : 'json',
+                returnAll : false,
+                cache :true,
+                data:
+                {
+                    values:{
+                    	type:"login",
+                    	username:,
+
+                    }
+                }
+        },
+        function(ret, err) 
+        {
+                if (ret) 
+                {
+                        var back_info=ret;
+                        var weiXin = api.require('weiXin');
+                        weiXin.registerApp
+                        (
+                            function(ret,err)
+                            {
+                                if (ret.status)
+                                {
+                                    weiXin.payOrder(
+                                    {
+                                orderId:back_info.prepayid,
+                                partnerId:back_info.partnerid,
+                                nonceStr:back_info.noncestr,
+                                timeStamp:back_info.timestamp,
+                                package:back_info.package,        
+                                sign:back_info.sign
+                                },function(ret,err)
+                                {
+                                     if (ret.status) 
+                                     {
+                                             alert('支付成功');
+                                     }
+                                     else
+                                     {
+                                             alert(err.msg);
+                                     }
+                                });
+                                }
+                                else
+                                {
+                                        alert(err.msg);
+                                }
+                            }
+                        );
+                }
+                else
+                {
+                        alert(json2str(err));
+                }
+        });
+	}
+	</script>
+	</body>
+</html>

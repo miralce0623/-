@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<title></title>
+		<style>
+		*{margin:0;padding: 0;}
+		html,body{height: 100%;font-family: sans-serif;}
+		.wrap{
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: flex;
+			/*设置垂直显示*/
+			-webkit-box-orient:vertical;
+			-webkit-flex-flow:column;
+			flex-flow:column;
+			height:100%;
+		}
+		.header{position: relative; height: 120px; line-height:120px;  overflow: hidden; background: #229d63;font-size:2rem;text-align: center;color:#fff;}
+		.header a{position:absolute;display:block;width:120px;height:120px;background:url(../image/back1.png) no-repeat center center;  background-size:48px;}
+		.header span{  }
+		.sl_div{
+			-webkit-box-flex:1;
+			-webkit-flex:1;
+			flex:1;
+			overflow:hidden;
+			position: relative;
+			width: 100%;
+			background-color: #ccc;
+		}
+
+		.main{ width: 100%; overflow: hidden; position: absolute; top: 0; left: 0;}
+
+		.btn_div{ padding: 0 30px; height: 50px; margin-top:40px; overflow: hidden;}
+		.btn_div a{ display: block; float: left; color: #fff; height: 50px; line-height: 50px; font-size: 28px;border-radius: 5px;padding: 0 10px;}
+		.btn_div a.a1{ background: #229d63;}
+		.btn_div a.a2{ background: #c22121;display: inline;margin-left: 10px;}
+		.btn_div a.a3{ background: #26bc46;float: right;}
+		.btn_div a.a2 img{ padding-right:5px;}
+
+		.slider{ margin: 200px auto 0 !important;}
+
+		.focus span{width:20px;height:20px;margin-right:10px;border-radius:50%;background:rgba(255,255,255,.4);font-size:0}
+		.focus span.current{background:#fff}
+		.slider a{ display: block; width:237px; height: 361px; margin: 0 auto;}
+		.slider img{ display: block; width:227px; height: 291px; margin: 0 auto; border: 5px solid #fff;}
+		.slider li a span{ display: block; margin: 0 auto; color: #fff; font-size: 34px; text-align: center; font-weight: bold; line-height: 60px;}
+		.slider li .two{ width:606px; margin: 0 auto; overflow: hidden;}
+		.slider li .two a{ display: inline; float: left; margin-left: 44px;}
+
+		.slider li .text{ width: 650px; height: 482px; margin: 0 auto; border: 5px solid #c17e0b; background: #fefcc9;}
+		.slider.slider_text{ margin: 180px auto 0 !important;}
+		.slider li .text p{ color: #857840; font-size: 32px; padding: 30px; line-height: 50px;}
+		</style>
+		<script type="text/javascript" src="../script/wap.js" ></script>		
+	</head>
+	<body>
+		<div class="wrap">
+			<div class="header" id="header">
+				<a id="back" onclick="closeWin();"></a>
+				<span id="title"></span>
+			</div>
+			<div class="sl_div">
+				<img src="../image/bj1.jpg" class="bj"/>
+ 				<div class="main" id="info">
+					<div class="btn_div" id="info-hd">
+					</div>
+					<div class="slider">
+					  <ul>
+ 					    <li id="slider1"></li>
+						<li id="slider2"></li>
+					  </ul>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	  <script type="text/javascript" src="../script/jquery-1.11.1.min.js" ></script>
+	  <script type="text/javascript" src="../script/yxMobileSlider.js"></script>
+	  <script type="text/javascript" src="../script/api.js" ></script>
+	  <script>
+	  	apiready=function(){
+	  		var header = $api.byId('header');
+	  		$api.fixIos7Bar(header);
+	  		$api.fixStatusBar(header);
+	  		api.setStatusBarStyle({
+            	style:'dark',
+            	color:'#6ab494'
+            });
+           getInfo();
+
+	  	};
+	  	
+		$(".slider").yxMobileSlider({width:720,height:720,during:5000});
+ 		function closeWin(){
+ 			api.closeWin();
+ 		}	  
+ 		//获取纪念馆信息
+ 		function getInfo(){
+ 			api.ajax({
+	             url:'http://www.ganhuai.net/json/home.aspx?number='+api.pageParam.id,
+	             method:'get',
+	             timeout:30,
+	             cache:true,
+	             dataType:'json'
+             },function(ret,err){
+             	var infoHd="",slider1="",slider2="",slider3="";
+             	if(ret){
+             		var imgPath="";
+             		//infoHd='<a class="a1">普通馆</a><a class="a2"><img src="../image/icon4.png" align="absmiddle" />一级</a><a class="a3">我的亲友馆</a>';
+             		slider1='<a><img src="'+imgPath+ret.img1+'"><span>'+ret.name1+'</span></a>';
+             		if(ret.peopleCount==2){
+						slider1+='<a><img src="'+imgPath+ret.img2+'"><span>'+ret.name2+'</span></a>';
+						slider1='<div class="two">'+slider1+'</div>'
+					}
+					slider2='<div class="text"><p>陵园号   ：    '+ret.id+'<br />创建日期：   '+ret.buildDate+'<br />创建者   ：     '+ret.creator+'</p></div>';
+             		$("#title").html(ret.title);
+             		$("#info-hd").html(infoHd);
+             		$("#slider1").html(slider1);
+             		$("#slider2").html(slider2);
+              	}else{
+             		api.alert({
+                     	msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+                     });
+             	}
+             });
+ 		}  
+	    		
+	  </script>		
+	</body>
+</html>

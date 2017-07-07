@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+  <meta content="telephone=no" name="format-detection">
+  <meta content="email=no" name="format-detection">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+  <title></title>
+  <style>
+  .g-hd{color:#fff;text-align:center;}
+  .touxiang img{width:100px;height:100px;border-radius:50%;}
+  </style>            
+</head>
+<body>
+  <div class="yanzhen g-hd" id="g-hd">个人主页</div>
+  <div class="gerenzhuye">
+    <div class="touxiang" id="avatar"></div>
+    <p class="juli"><span id="nickname"></span><br>登录帐号：<span id="username"></span><br>账户余额：<span id="coin"></span><p>
+  </div>
+<!--   <div class="youqingguan" onclick="message();">
+    <div class="youqingguan_left">给我留言</div>
+    <div class="youqingguan_right"></div>
+  </div> -->
+  <div class="youqingguan" onclick='recharge();'>
+    <div class="youqingguan_left">在线充值</div>
+    <div class="youqingguan_right"></div>
+  </div>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/zepto.min.js"></script>   
+  <script>
+  var username="";
+  apiready=function(){
+    var header = $api.byId('g-hd');
+    $api.fixIos7Bar(header);
+    $api.fixStatusBar(header);
+    api.setStatusBarStyle({
+    style:'dark',
+    color:'#6ab494'
+    });
+	// 判断用户是否登录
+    api.getPrefs({
+            key : 'userinfo' // 用户信息key
+    }, function(ret, err) {
+            var val = ret.value;
+            if (val && val != "") {
+                username = typeof val == "string" ? val : JSON.stringify(val);
+                getInfo(username);
+            } else {
+                api.openWin({
+                    name: 'login',
+                    url: 'win_login.html'
+                });
+            }
+    });
+	api.addEventListener({
+	    name:'reg_login_successEvent'
+    },function(ret,err){
+    	if(ret && ret.value){
+    		username=ret.value;
+            getInfo(username);
+    	}
+    });    
+    api.setRefreshHeaderInfo({
+      visible:true,
+      bgColor:'#ccc',
+      textColor:'#fff',
+      textDown:'下拉刷新',
+      textUp:'松开刷新',
+      showTime:true
+    },function(ret,err){
+      alert(username);
+      getInfo(username);
+      api.refreshHeaderLoadDone();  //恢复正常状态  
+    });
+    
+    //api.refreshHeaderLoading(); 
+
+    
+  };
+
+  function recharge() {
+    api.openWin({
+    name: 'recharge',
+    url: 'win_recharge.html',
+    pageParam:{
+    	username:username
+    }
+    }); 
+  }
+  function message() {
+    api.openWin({
+    name: 'message',
+    url: 'win_message.html'
+    });             
+  }
+
+  //获取个人信息
+  function getInfo(){
+    api.ajax({
+             url:'http://www.ganhuai.net/json/homepage.aspx?username='+username,
+             method:'get',
+             timeout:30,
+             cache:false,
+             dataType:'json'
+           },function(ret,err){
+            if(ret){
+                $("#avatar").html('<img src="'+ret.photopath+'" />');
+                $("#nickname").html(ret.nickname);
+                $("#username").html(username);
+                $("#coin").html(ret.coin);
+              }else{
+              api.alert({
+                    msg:('错误码1：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+                   });
+            }
+           });
+  }    
+  </script>
+</body>
+</html>

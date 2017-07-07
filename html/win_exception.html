@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+	<title></title>
+	<style>
+	html,body{height:100%;}
+	#g-doc{
+		display:-webkit-box;
+		display: -webkit-flex;
+		display:flex;
+		
+		-webkit-box-orient:vertical;
+		-webkit-flex-flow:column;
+		flex-flow:column;
+		height:100%;
+		overflow:hidden;
+	}
+	#g-hd{
+		display: -webkit-box;
+		display: -webkit-flex;
+		display:flex;
+		
+		width:100%;
+		height: 60px;
+		background:#229d63; 
+	}	
+	#g-mn{
+		-webkit-box-flex:1;
+		-webkit-flex:1;
+		flex:1;
+		padding:10px;
+		overflow: auto;
+	}
+
+	#g-hd .left{
+		width:60px;
+		background:url(../image/back1.png) no-repeat center center;
+		background-size:24px 24px;
+	}
+
+	#g-hd .mid{
+		-webkit-box-flex:1;
+		-webkit-flex:1;	
+		flex:1;
+		line-height: 60px;
+		color: #fff;
+		font-size:18px;
+		text-align: center;
+	}
+	#g-hd .right{
+		width:60px;
+	}		
+	
+
+	#g-mn .cnt{margin:15px auto;line-height:1.2em;}
+	#g-mn .cnt p{margin-bottom:15px;}
+
+	.green{ color:#4c9d76;}	
+	</style>
+</head>
+<body>
+		
+<div id="g-doc">
+	<div id="g-hd">
+		<div class="left" onclick="closeWin();"></div>
+		<div class="mid">服务条款</div>
+		<div class="right"></div>
+	</div>
+
+	<div id="g-mn">
+		<div class="cnt" id="content">
+			<p>免责条款</p>
+			<p>1、任何使用本网站的用户均应仔细阅读本声明，用户可选择不使用本网站，用户使用本网站的行为将被视为对本声明全部内容的认可。</p>
+			<p>2、本网站及其任何组成部分不得被再造、复制、抄袭、交易，或为任何未经本站允许的商业目的所使用。如果本站确定客户行为违法或有损其网站和企业的利益，本网站将保留，包括但不限于拒绝提供服务、冻结会员专有帐户的权利。</p>
+			<p>3、本网站上的链接服务可以直接进入其他站点，这些链接的站点不受本网站的控制，本网站对任何与本站链接网站的内容不负责任。</p>
+			<p>4、本网站尊重并保护所有使用本网站用户的个人隐私权，用户注册的用户名、电子邮件地址等个人资料，非经用户亲自许可或根据相关法律的强制性规定，本网站不会主动地泄露给第三方。用户在使用搜索引擎时输入的关键字将不被认为是用户的个人隐私资料。。</p>
+			<p>5、任何单位或个人认为通过本网站的内容可能涉嫌侵犯其合法权益，应该及时向本网站或服务网站书面反馈，并提供身份证明、权属证明及详细侵权情况证明，本网站在收到上述法律文件后，将会尽快移除被控侵权内容。</p>
+			<p>6、当您使用本网站服务时，您不可以：1）粘贴或传播任何非法的、具威胁性的、诽谤性的、贬损的、报复的、亵渎的或任何其他法律禁止的信息，包括但不限于传播任何煽动性的、鼓励犯罪的，或违反公民义务或任何其他违反地方法规、国家法律、法规或国际法律、惯例或公约的内容。2）粘贴或传播散布任何他人的私人事件、粘贴或传播带有病毒、或任何带有贬损或损害性特征的内容；粘贴或传播任何可能侵害其他人财产权利的数据、图形或程序，包括以非法形式使用未经注册的版权文本、图形或程序，商业秘密及其他保密信息、商标、服务标识等；3）以任何形式干扰本网站的其他用户。</p>
+			<p>7、本网站适用中华人民共和国法律。我们保留随时更改我们的网站和上述免责及条款的权利</p>
+		</div>
+	</div>
+</div>
+
+            
+
+<script src="../script/zepto.min.js"></script>
+<script src="../script/api.js"></script>
+<script>
+apiready=function(){
+	var header=$api.byId('g-hd');
+	$api.fixIos7Bar(header);    	
+	$api.fixStatusBar(header);
+	api.setStatusBarStyle({
+		style: 'dark',
+		color: '#6ab494'
+	});
+	
+	
+ 
+};
+
+
+
+function closeWin(){
+	api.closeWin();
+}
+</script>         
+</body>
+</html>

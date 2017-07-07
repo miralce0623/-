@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+            <meta content="telephone=no" name="format-detection">
+            <meta content="email=no" name="format-detection">
+            <meta content="yes" name="apple-mobile-web-app-capable">
+            <meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<title></title>
+            <style>
+            html,body{height:100%;}
+            #g-doc{
+                  display:-webkit-box;
+                  display:-webkit-flex;
+                  display:flex;
+                  -webkit-box-orient:vertical;
+                  -webkit-flex-flow:column;
+                  flex-flow:column;
+                  height:100%;
+            }            
+
+            #g-mn{
+                  -webkit-box-flex:1;
+                  -webkit-flex:1;
+                  flex:1;
+                  overflow:auto;
+            }
+
+            </style>  
+      
+	</head>
+	<body>
+	<div id="g-doc">
+             <div class="yanzhen" id="g-hd">
+            <div class="yanzhen_left" onclick="closeFrame();"></div>
+            <div class="yanzhen_mid">被纪念人资料</div>
+            <div class="yanzhen_right" onclick="openDetailEdit(id);">编辑资料</div>
+            </div>
+            <div id="g-mn">
+                  
+            </div>
+         
+      </div>
+      <script type="text/javascript" src="../script/zepto.min.js"></script>   
+    <script type="text/javascript" src="../script/api.js"></script>   
+    <script>
+      apiready=function(){
+            var header = $api.byId('g-hd');
+            $api.fixIos7Bar(header);
+            $api.fixStatusBar(header);
+            api.setStatusBarStyle({
+                  style:'dark',
+                  color:'#6ab494'
+             });
+      
+          getInfo();
+      }; 
+	function openDetailEdit(id){
+	    api.getPrefs({
+	        key:'userinfo'
+        },function(ret,err){
+        	var val=ret.value;
+        	if(ret && val != ""){
+        		var username=ret.value;
+        		//alert(api.pageParam.creator);
+        		if(username!=api.pageParam.creator){
+        			alert("您没有权限修改资料");
+        			return;
+        		}else{
+					api.openFrame({
+				        name: 'profile_edit',
+				        url: 'frm_profile_edit.html',
+			            pageParam:api.pageParam,
+				        rect: {
+					        x:0,
+					        y:0,
+					        w:'auto',
+					        h:api.winHeight-60
+				        }
+			        });        		
+        		}
+        	}else{
+        		alert("网络连接不可用");
+        	}
+        });
+        	
+
+	}
+      function closeFrame(){
+			api.setFrameGroupIndex({
+                name: 'group_home',
+                index:3,
+                reload:true
+            });   
+            api.closeFrame();
+      }  
+
+      //获取被纪念人信息
+      function getInfo(){
+      	api.showProgress();
+            api.ajax({
+           url:'http://www.ganhuai.net/json/profile.aspx?number='+api.pageParam.id,
+           method:'get',
+           timeout:30,
+           cache:true,
+           dataType:'json'
+       },function(ret,err){
+       		api.hideProgress();
+            if(ret){
+                  var info="";
+                  info+='<div class="zhanshi"><img src="'+ret.img1+'"></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">姓名</div><div class="yanzhen_juti_right bianyuan">'+ret.name1+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">性别</div><div class="yanzhen_juti_right bianyuan">'+ret.gender1+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">生辰</div><div class="yanzhen_juti_right bianyuan">'+ret.birthDate1+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">忌日</div><div class="yanzhen_juti_right bianyuan">'+ret.deathDate1+'</div></div>';
+                  if(ret.peopleCount==2){
+                  info+='<div class="zhanshi"><img src="'+ret.img2+'"></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">姓名</div><div class="yanzhen_juti_right bianyuan">'+ret.name2+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">性别</div><div class="yanzhen_juti_right bianyuan">'+ret.gender2+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">生辰</div><div class="yanzhen_juti_right bianyuan">'+ret.birthDate2+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">忌日</div><div class="yanzhen_juti_right bianyuan">'+ret.deathDate2+'</div></div>';                    
+                  }                  
+                  info+='<div class="danren"><div class="yanzhen_juti_left">安葬地点</div><div class="yanzhen_juti_right bianyuan">'+ret.deathPlace+'</div></div>';
+                  //info+='<div class="danren"><div class="yanzhen_juti_left">生平简介</div><div class="yanzhen_juti_right bianyuan">'+ret.biography+'</div></div>';
+                  
+
+                  $("#g-mn").html(info);
+
+            }else{
+                  api.alert({
+                  msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+               });
+            }
+       });
+      }                
+	</script>	
+	</body>
+</html>

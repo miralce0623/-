@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <meta charset="utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+      <meta content="telephone=no" name="format-detection">
+      <meta content="email=no" name="format-detection">
+      <meta content="yes" name="apple-mobile-web-app-capable">
+      <meta content="black" name="apple-mobile-web-app-status-bar-style">
+      <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+      <title></title>
+      <style>
+      html,body{height:100%;}
+      #g-doc{
+      display:-webkit-box;
+      display:-webkit-flex;
+      display:flex;
+      -webkit-box-orient:vertical;
+      -webkit-flex-flow:column;
+      flex-flow:column;
+      height:100%;
+      }
+
+      #g-mn{
+      -webkit-box-flex:1;
+      -webkit-flex:1;
+      flex:1;
+      overflow:auto;
+      }
+      </style>
+</head>
+<body>
+<div id="g-doc">
+      <div class="yanzhen" id="g-hd">
+            <div class="yanzhen_left" onclick="closeWin();"></div>
+            <div class="yanzhen_mid">购买设置</div>
+            <div class="yanzhen_right" onclick="closeWin();">取消</div>
+      </div>                
+      <div id="g-mn">   
+            <div class="zhanshi"><img src="" id="photoPath"></div>
+             <div class="danren"><div class="yanzhen_juti_left">名称</div><div class="yanzhen_juti_right bianyuan" id="descName">--</div></div>  
+            <div class="danren"><div class="yanzhen_juti_left">单价</div><div class="yanzhen_juti_right bianyuan" id="needCoin">--</div></div> 
+            <div class="danren"><div class="yanzhen_juti_left">祭品数</div><div class="yanzhen_juti_right bianyuan">1</div></div>                           
+            <input type="hidden" id="serialNumber">
+      </div>
+      <div style="height:50px;"></div>
+      <div id="stickey_bottom">
+            <div class="footer">
+            <div class="footer_left">共需支付<span id="needCoins">--</span>个桃源币</div>
+            <div class="footer_right"><a id="buy"  class="button">确认购买</a></div>
+            </div>
+      </div>  
+
+</div>
+<script type="text/javascript" src="../script/api.js"></script>  
+<script type="text/javascript" src="../script/zepto.min.js"></script> 
+<script>
+apiready=function(){
+      var header = $api.byId('g-hd');
+      $api.fixIos7Bar(header);
+      $api.fixStatusBar(header);
+      api.setStatusBarStyle({
+            style:'dark',
+            color:'#6ab494'
+       });
+      //alert(api.pageParam.id);
+      api.getPrefs({
+        key:'userinfo'
+      },function(ret,err){
+      var val=ret.value;
+      if(ret && val != ""){
+            $api.setStorage("username", val);
+      }else{
+            $api.setStorage("username", "");
+      }
+      });
+
+      show();
+};
+function show(){
+      $("#serialNumber").val(api.pageParam.serialNumber);
+      $("#photoPath").attr("src",api.pageParam.photoPath);
+      $("#descName").html(api.pageParam.descName);
+      $("#needCoin").html(api.pageParam.needCoin);
+      var needCoin=parseInt(api.pageParam.needCoin);
+      $("#needCoins").html(needCoin);
+}
+
+function closeWin(){
+	api.closeWin();
+}
+function openPay () {
+	api.openWin({
+	    name: 'pay',
+	    url: 'win_pay.html'
+    });
+}
+
+//确认购买
+$("#buy").click(function () {
+  api.ajax({
+        url:'http://www.ganhuai.net/json/jingxian.aspx?number='+api.pageParam.id+'&sacrificeSerialNumber='+api.pageParam.serialNumber,
+        method:'post',
+        dataType:'json',
+        returnAll:false,
+        data:{
+            values:{
+                  username:$api.getStorage("username"),
+                  sacrificeNeedCoin:api.pageParam.needCoin,
+                  totalNeedCoin:api.pageParam.needCoin
+            }
+        }
+  },function(ret,err){
+    if(ret){
+      //alert(JSON.stringify(ret));
+      
+      alert(ret.result);    
+      closeWin();      //关闭frame
+        
+          
+    }else{
+      api.alert({
+        msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+      });
+    }
+
+  });
+});
+</script>     
+</body>
+</html>

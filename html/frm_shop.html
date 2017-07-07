@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/style1.css"/>
+	<title></title>
+	<style>
+		html,body{height:100%;}
+
+		#g-mn{
+			overflow:auto;
+		}
+	</style>
+</head>
+<body>
+	<div id="g-doc">
+	
+		<div id="g-mn">
+			<div class="wupin" id="wupin">
+<!--  			<div class="wupin_left">
+			<img src="../image/tupian.png" width="100%">
+			<div class="neirong">深切关怀<p class="huise"><em style="text-decoration:line-through;">原价：30</em><em class="green"> 现价：27</em><br>时效：2天  亲情值+33</p><a href="#" class="gouwuche">加入购物车</a></div>
+			</div>
+			<div class="wupin_left">
+			<img src="../image/tupian.png" width="100%">
+			<div class="neirong">深切关怀<p class="huise"><em style="text-decoration:line-through;">原价：30</em><em class="green"> 现价：27</em><br>时效：2天  亲情值+33</p><a href="#" class="gouwuche">加入购物车</a></div>
+			</div> 
+			</div>  -->
+
+	
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../script/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="../script/modal.js"></script>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+	var pageSize=6; // 页容量
+	var recordCount=0;  //定义一个变量存储第一次加载返回来的总记录数
+	var totalPages=0;  // 定义一个变量存储第一次加载返回来的总页数
+	$api.setStorage("shopCurrentPage", 1); // 默认设置为第一页		
+      apiready=function(){
+		api.setRefreshHeaderInfo({
+			visible:true,
+			bgColor:'#ccc',
+			textColor:'#fff',
+			textDown:'下拉刷新',
+			textUp:'松开刷新',
+			showTime:true
+	    },function(ret,err){
+			getList(1);
+			api.refreshHeaderLoadDone();	//恢复正常状态 	
+	    });
+    
+    	api.refreshHeaderLoading();	
+	
+		// 结合上拉刷新：
+		api.addEventListener({
+		        name:'scrolltobottom',
+		        extra:{
+		                threshold:20 //设置距离底部多少距离时触发，默认值为0，数字类型
+		        }
+		},function(ret,err){
+		  var _page=parseInt($api.getStorage("shopCurrentPage"));
+		  if(_page+1<=totalPages){
+		        getList(_page+1);
+		        $api.setStorage("shopCurrentPage", _page+1); // 页码+1
+		  }
+		  else{
+		     api.toast({
+		         msg:'没有更多数据了！'
+	         });   
+		  }
+		});
+	          
+      }; 	
+	function closeWin(){
+		api.closeWin();
+	}
+	function openCart(){
+		api.openWin({
+	        name: 'cart',
+	        url: 'win_cart.html'
+        });
+	}
+
+
+//获取敬献物品列表
+function getList(page){
+	api.showProgress();
+	api.ajax({
+     url:'http://www.ganhuai.net/json/SacrificeList.aspx?classID='+api.pageParam.classID+'&pagesize='+pageSize+'&page='+page,
+     method:'get',
+     timeout:30,
+     cache:true,
+     dataType:'json'
+ },function(ret,err){
+ 	api.hideProgress();
+ 	if(ret){
+ 		var list="";
+	    if(page>1) list=$('#wupin').html();
+	    recordCount=ret.recordCount;
+	    totalPages=Math.ceil(ret.recordCount/pageSize); 
+ 		listData=ret.list;
+ 		for (var i = 0; i < listData.length; i++) {
+ 			list+='<div class="wupin_left" data-index="'+listData[i].SerialNumber+'" onclick="buy('+listData[i].SerialNumber+',\''+listData[i].DescName+'\',\''+listData[i].currentPrice+'\',\''+listData[i].PhotoPath+'\')"><img src="'+listData[i].PhotoPath+'">';
+			list+='<div class="neirong">'+listData[i].DescName+'<p class="huise"><em style="text-decoration:line-through;">原价：'+listData[i].costPrice+'</em><em class="green"> 现价：'+listData[i].currentPrice+'</em><br>时效：'+listData[i].aging+'</p>';
+			//list+="<a href="#" class="gouwuche">加入购物车</a>";
+			list+="</div></div>";
+ 		};
+
+ 		$("#wupin").html(list);
+
+ 	}else{
+ 		api.alert({
+         	msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+         });
+ 	}
+ });
+} 	
+
+function buy(serialNumber, descName, needCoin, photoPath){
+	api.openWin({
+	    name: 'buy',
+	    url: 'win_buy.html',
+	    pageParam:{
+	    	serialNumber:serialNumber,
+	    	descName:descName,
+	    	needCoin:needCoin,
+	    	photoPath:photoPath,
+	    	id:api.pageParam.id
+	    }
+    });
+}
+	</script>
+</body>
+</html>

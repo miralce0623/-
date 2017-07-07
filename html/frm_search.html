@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+	<title></title>
+	<style>
+	html,body{height:100%;}
+	#g-doc{
+		display:-webkit-box;
+		display: -webkit-flex;
+		display:flex;
+		
+		-webkit-box-orient:vertical;
+		-webkit-flex-flow:column;
+		flex-flow:column;
+	}
+	#g-mn{
+		-webkit-box-flex:1;
+		-webkit-flex:1;
+		flex:1;
+	}
+	#g-hd{
+		display: -webkit-box;
+		display: -webkit-flex;
+		display:flex;
+		
+		width:100%;
+		height: 60px;
+		background:#229d63; 
+	}
+	#g-hd .left{
+		width:60px;
+		background:url(../image/back1.png) no-repeat center center;
+		background-size:24px 24px;
+	}
+
+	#g-hd .mid{
+		-webkit-box-flex:1;
+		-webkit-flex:1;	
+		flex:1;
+		padding:10px 5px;
+		color: #dfdfdf;
+		font-size:16px;
+	}
+	#g-hd .right{
+		width:60px;
+	}		
+	.search-box{height:40px;line-height:40px;background:transparent;border:0;color:#dfdfdf;}
+	.search-box::-webkit-input-placeholder{color:#dfdfdf;}
+	</style>
+</head>
+<body>
+		
+<div id="g-doc">
+	<div id="g-hd">
+		<div class="left" onclick="closeFrame();"></div>
+		<div class="mid"><input name="searchBox" id="searchBox" type="text" class="search-box" placeholder="搜索被纪念人或馆号" onclick="search();"></div>
+		<div class="right"></div>
+	</div>
+
+	<div id="g-mn">
+	</div>
+</div>
+
+            
+
+<script src="../script/zepto.min.js"></script>
+<script src="../script/api.js"></script>
+<script>
+apiready=function(){
+	var header=$api.byId('g-hd');
+	$api.fixIos7Bar(header);    	
+	$api.fixStatusBar(header);
+	api.setStatusBarStyle({
+		style: 'dark',
+		color: '#6ab494'
+	});
+	
+	$("#searchBox").val(api.pageParam.key);
+	
+	var hdHeight=$('#g-hd').height();
+	
+	api.openFrame({
+	    name: 'search_result',
+	    url: 'frm_search_result.html',
+	    pageParam:api.pageParam,
+	    rect: {
+            x:0,
+            y:hdHeight,
+            w:'auto',
+            h:api.winHeight-hdHeight-60
+	    },
+	    reload:true
+    });
+
+ 
+};
+
+function search(){
+	var UISearchBar = api.require('UISearchBar');
+	UISearchBar.open({
+	    placeholder: '搜索被纪念人或馆号',
+	    historyCount: 10,
+	    showRecordBtn: false,
+	    texts: {
+	        cancelText: '取消',
+	        clearText: '清除搜索记录'
+	    },
+	    styles: {
+	        navBar: {
+	            bgColor: '#229d63',
+	            borderColor: '#ccc'
+	        },
+	        searchBox: {
+	            bgImg: '',
+	            color: '#000',
+	            height: 44
+	        },
+	        cancel: {
+	            bg: 'rgba(0,0,0,0)',
+	            color: '#fff',
+	            size: 16
+	        },
+	        list: {
+	            color: '#696969',
+	            bgColor: '#FFFFFF',
+	            borderColor: '#eee',
+	            size: 16
+	        },
+	        clear: {
+	            color: '#000000',
+	            borderColor: '#ccc',
+	            size: 16
+	        }
+	    }
+	},function( ret, err ){
+	    if( ret ){
+	         openSearch(ret.text);
+	         var UISearchBar = api.require('UISearchBar');
+			 UISearchBar.close();
+	    }else{
+	         alert( JSON.stringify( err ) );
+	    } 	    
+	});
+
+}
+function openSearch(key){
+	api.openFrame({
+	    name: 'search',
+	    url: 'frm_search.html',
+	    pageParam:{
+	    	key:key
+	    },
+	    rect: {
+		    x:0,
+		    y:0,
+		    w:'auto',
+		    h:api.winHeight-60
+	    },
+	    reload:true
+    });
+}
+
+function closeFrame(){
+	api.closeFrame({
+	    name: 'search_result'
+    });
+	api.closeFrame({
+	    name: 'search'
+    });
+}
+</script>         
+</body>
+</html>

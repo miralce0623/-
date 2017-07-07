@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<link href="css/css2.css" rel="stylesheet" type="text/css" />
+		<title>感怀</title>
+</head>
+<body>
+	<div id="header"></div>
+	<div id="main">
+	</div>
+	<!--底部-->
+	<div id="stickey_bottom1">
+	<ul class="bottom1">
+	<li data-index='0' onclick="openFrame(this)"><a href="#"  class="s9">我在纪念</a></li>
+	<li data-index='1' onclick="openFrame(this)"><a href="#" class="s10 hover">广场</a></li>
+	<li data-index='2' onclick="openFrame(this)"><a href="#" class="s11">个人主页</a></li>
+	<li data-index='3' onclick="openFrame(this)"><a href="#" class="s12">关于</a></li>
+	</ul>
+	</div>
+	<script type="text/javascript" src="./script/api.js"></script>
+	<script type="text/javascript" src="./script/zepto.min.js"></script>
+	<script type="text/javascript" src="./script/common.js"></script>	
+    <script>
+    	apiready=function(){
+        	
+            	api.openFrameGroup({
+		            name: 'group',
+		            rect:{
+			            x:0,
+			            y:0,
+			            w:'auto',
+			            h:api.winHeight-$('#stickey_bottom1').height()
+		            },
+		            frames:[{
+		            	name:'jinian',
+		            	url:'html/frm_jinian.html'
+		            },{
+		            	name:'main',
+		            	url:'html/frm_main.html'
+		            },{
+		            	name:'home',
+		            	url:'html/frm_home.html'
+		            },{
+		            	name:'about',
+		            	url:'html/frm_about.html'
+		            }],
+		            scrollEnabled:false,
+		            index:1
+		            
+	            },function(ret,err){
+	            	
+	            });
+
+    	};
+    	
+    	//切换页面
+    	function openFrame(obj){
+    		try{
+    			$(obj).parent().find('.hover').removeClass('hover');
+    			api.setFrameGroupIndex({
+	                name: 'group',
+	                index:$(obj).data('index')
+                });
+    		}catch(e){
+    			alert(e);
+    		}
+
+    	}
+		
+		// 解决状态栏重合，并优化fixStatusBar代码,Android4.4版本以上添加25px
+        function fixStatusBar(headerid, callback) {
+                var header = $api.byId(headerid);
+                var systemType = api.systemType;
+                var systemVersion = parseFloat(api.systemVersion);
+                if (systemType == "ios" || (systemType == "android" && systemVersion >= 4.4)) {
+                        if (systemType == "android") {
+                                header.style.paddingTop = '25px';
+                        }
+                        $api.fixStatusBar(header);
+                } else {
+                        $api.fixIos7Bar(header);
+                }
+                //var headerPos = $api.offset(header);
+                if ( typeof callback == "function") {
+                        //callback(headerPos);
+                        callback();
+                }
+        }   	
+    </script>          
+</body>
+</html>

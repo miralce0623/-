@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<title></title>
+	<style>
+	*{margin:0;padding:0;}
+	a{ text-decoration: none; color: #404040;}
+	p,h1,h2,h3,h4,h5,h6{ padding: 0; margin: 0;}
+	img{ border: none;}
+	ul,li{ list-style: none;}	
+	html,body{height:100%;font-family: sans-serif;}
+	input:focus,textarea:focus{outline:none;}
+
+	.xiayibu2{ margin:10px; height:40px; line-height:40px; background:#20955e; border-radius:5px; text-align:center; color:#fff; display:block;}
+	.juli{ margin-top:10px;}
+	.duowenben{ width:94%; height:100px; border:0; line-height:24px; padding:2% 3%;}	
+
+	.list{font-size:14px;line-height:25px;color: #9a9a9a;}
+	.list .record-count{padding:10px 15px; border-bottom:1px solid #eee;}
+	.list ul li{background:#fff; padding:10px 15px; border-bottom:1px solid #eee;}
+	.list ul li .user{font-size: 12px;}
+	.list ul li .datetime{margin-left:20px;font-size: 12px;}
+
+	.green{ color:#4c9d76;}
+	</style>
+</head>
+<body>
+<div class="wrap">
+	<div class="cnt">
+		<div class="tab_con" id="tab0">
+		<textarea name="Content" id="Content" cols="" rows="" class="duowenben juli"></textarea>	
+		<input id="MemorialHallID" type="hidden" value="">
+		<a href="#" id="saveRemark" class="xiayibu2">保存</a>
+		</div>
+		<div class="list">
+			<div class="record-count">共有<span id="record-count">0</span>篇留言</div>
+			<ul id="list">
+
+			</ul>
+
+		</div>
+	</div>
+	
+</div>
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script>
+var pageSize=10; // 页容量
+var totalData=0;  //定义一个变量存储第一次加载返回来的总记录数
+var totalPages=0;  // 定义一个变量存储第一次加载返回来的总页数
+$api.setStorage("remarkCurrentPage", 1); // 默认设置为第一页	
+
+apiready=function(){
+	api.getPrefs({
+	        key:'userinfo'
+        },function(ret,err){
+        	var val=ret.value;
+        	if(ret && val != ""){
+        		$api.setStorage("username", val);
+        	}else{
+        		$api.setStorage("username", "");
+        	}
+        });
+
+	api.setRefreshHeaderInfo({
+		visible:true,
+		bgColor:'#ccc',
+		textColor:'#fff',
+		textDown:'下拉刷新',
+		textUp:'松开刷新',
+		showTime:true
+    },function(ret,err){
+		getList(1);
+		api.refreshHeaderLoadDone();	//恢复正常状态 	
+    });
+
+    
+    api.refreshHeaderLoading();	
+	
+	// 结合上拉刷新：
+	api.addEventListener({
+        name:'scrolltobottom',
+        extra:{
+                threshold:0 //设置距离底部多少距离时触发，默认值为0，数字类型
+        }
+	},function(ret,err){
+	  var _page=parseInt($api.getStorage("remarkCurrentPage"));
+	  if(_page+1<=totalPages){
+	        getList(_page+1);
+	        $api.setStorage("remarkCurrentPage", _page+1); // 页码+1
+	  }
+	  else{
+	      api.toast({
+	              msg : '没有更多数据了！'
+	      });	  
+	  }
+	});
+   
+
+};
+function getList (page) {
+	api.showProgress();
+	api.ajax({
+		url:'http://www.ganhuai.net/json/hallCommentList.aspx?number='+api.pageParam.id+'&pagesize='+pageSize+'&page='+page,
+		method:'get',
+		timeout:30,
+		cache:true,
+		dataType:'json'
+	},function(ret,err){
+		api.hideProgress();
+		if(ret){
+			totalData=ret.totalData;
+	    	totalPages=Math.ceil(ret.totalData/pageSize);
+	    	var data=ret.data;	
+			var list="";
+			if(page>1) list=$('#list').html();
+			for (var i = 0; i < data.length; i++) {
+				list+='<li data-index="'+data[i].hallCommentMainID+'"><p>'+data[i].content+'</p><p><span class="user green">'+data[i].user+'</span><span class="datetime">'+data[i].addDateTime+'</span></p></li>';
+			};
+			$("#list").html(list);
+			$("#record-count").text(totalData);
+			$("#MemorialHallID").val(ret.memorialHallID);
+		}else{
+			api.alert({
+	     	msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+	     });
+		}
+	});
+}
+
+$("#saveRemark").click(function(){
+	var username="";
+	username=$api.getStorage("username");
+	var content=$("#Content");
+	if($.trim(content.val())==""){
+	  content.focus();
+	  api.toast({
+	          msg : '留言不能为空'
+	  });
+	  return;    
+	}
+	api.showProgress();
+	api.ajax({
+		url:'http://www.ganhuai.net/json/addHallComment.aspx?number='+api.pageParam.id,
+		method:'post',
+		timeout:30,
+		cache:true,
+		dataType:'json',
+		data:{
+			values:{
+				username:username,
+				MemorialHallID:$("#MemorialHallID").val(),
+				Content:$("#Content").val(),
+				MaxLen:300				
+			}
+		}
+	},function(ret,err){
+		api.hideProgress();
+		if(ret){
+			var flag = parseInt(ret.flag);
+			switch(flag){
+				case 1:
+					api.toast({
+						msg:"留言成功"
+					});
+					$("#Content").val("");
+					getList(1);	
+					break;
+				case 2:
+					api.toast({
+						msg:"内容不合法，请重新输入"
+					});
+					content.focus();
+					break;
+				case 3:
+					api.toast({
+						msg:"留言内容过多"
+					});
+					content.focus();
+					break;
+				case 4:
+					api.toast({
+						msg:"留言过快，请稍后在进行留言"
+					});
+					content.focus();
+					break;										
+			}
+
+		}else{
+			api.alert({
+	     	msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+	     });
+		}
+	});
+
+});	
+</script>
+</body>
+</html>

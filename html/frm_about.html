@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+         <link rel="stylesheet" type="text/css" href="../css/style2.css"/>
+		<title></title>
+		<style>
+		.g-hd{color:#fff;text-align:center;}
+		</style>
+	</head>
+	<body>
+			
+            <div class="yanzhen g-hd" id="g-hd">关于</div>
+            <div class="guanyu"><img src="../image/logo.png"><p><span id="version"></span></p></div>
+        
+<!--            <div class="youqingguan">
+            <div class="youqingguan_left">给我评分</div>
+            <div class="youqingguan_right"></div>
+            </div>-->
+             <div class="youqingguan">
+            <div class="youqingguan_left">功能介绍</div>
+            <div class="youqingguan_right"></div>
+            </div>
+             <div class="youqingguan" onclick="checkUpdate()">
+            <div class="youqingguan_left">检测更新</div>
+            <div class="youqingguan_right"></div>
+            </div>
+            <a onclick="quit();" class="xiayibu3">退出登录</a>
+      
+      <script type="text/javascript" src="../script/zepto.min.js"></script>
+      <script type="text/javascript" src="../script/api.js"></script>   
+      <script>
+      apiready=function(){
+            var header = $api.byId('g-hd');
+            $api.fixIos7Bar(header);
+            $api.fixStatusBar(header);
+            api.setStatusBarStyle({
+                  style:'dark',
+                  color:'#6ab494'
+             });
+          var appVersion = api.appVersion;
+          $("#version").html(appVersion);
+      };
+        
+	function checkUpdate(){
+		var mam = api.require('mam');
+		mam.checkUpdate(function(ret, err){
+		    if (ret) {
+		        var result = ret.result;
+		        if (result){
+		            //var str = '操作成功状态值:'+ret.status+';是否有更新:'+result.update+';设备上当前版本是否被强行关闭:'+result.closed+';新版本型号:'+result.version+';更新描述:'+result.versionDes+';强行关闭提示语:'+result.closeTip+';更新提示语:'+result.updateTip+';下载地址:'+result.source+';发布时间:'+result.time;
+
+		            if(result.update){
+		            	api.download({
+	                        url:result.source
+                        },function(ret,err){
+                        	//coding...
+                        });
+		            }else{
+		            	
+		             api.toast({
+			             msg:'您当前使用的版本已经是最新版啦！'
+		             }); 		            	
+		            }
+		        }
+		    } else{
+		        api.alert({msg:err.msg});
+		    }
+		});	
+	}
+		
+		function quit(){
+			api.removePrefs({
+			    key : "userinfo"
+			}, function(ret, err) {
+		        alert("用户已退出登录");
+				api.openWin({
+		            name: 'login',
+		            url: 'win_login.html'
+	            });			        
+			});			
+		}
+       </script>            
+            
+            
+			
+	</body>
+</html>

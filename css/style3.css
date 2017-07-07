@@ -1,0 +1,63 @@
+@charset "utf-8";
+/* CSS Document */
+
+.accordion,
+.accordion ul,
+.accordion li,
+.accordion a
+{
+	margin: 0;
+	padding: 0;
+	border: none;
+	outline: none;
+}
+
+.accordion li {
+	list-style: none;
+}
+
+/* Layout & Style */
+
+.accordion li > a {
+	display: block;
+	position: relative;
+	padding:0 10px;
+	height: 50px;
+	line-height:50px;
+	color: #000;
+	text-decoration: none;
+	background: url(../img/jt1.png) no-repeat right center #fff;
+	border-bottom:1px solid #eee;
+	margin-bottom:0px;
+}
+
+.accordion > li:hover > a,
+.accordion > li:target > a,
+.accordion > li > a.active {
+	color: #000;
+	background:url(../img/jt.png) no-repeat right center #fff;
+}
+
+/* Sub Menu */
+
+.sub-menu li a {
+	color: #8b8b8b;
+	background:#f8f8f8;
+	line-height:24px;
+	margin-top:8px;
+	margin-bottom:8px;
+	padding: 0 15px;
+	height:auto;
+}
+
+.sub-menu li:last-child a { border: none; }
+
+/* Functionality */
+
+.accordion li > .sub-menu {
+	display: none;
+}
+
+.accordion li:target > .sub-menu {
+	display: block;
+}

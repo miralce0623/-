@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<title></title>
+        <style>
+        *{margin:0;padding:0;}
+        body{ font-family: "微软雅黑"; margin: 0; padding: 0; background:#f8f8f8; color: #404040;}
+        a{ text-decoration: none; color: #404040;}
+        img{ border: none;}
+        ul,li{ list-style: none;}        
+        html,body{height:100%;}
+
+        #g-doc {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                /* 下面三个控制子div的显示方式，是垂直显示 */
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                flex-flow: column;
+                /* 上面三个控制子div的显示方式，是垂直显示 */
+                height: 100%;
+        }
+        #g-ft {
+                height: 60px;/*固定尾部*/
+                background:#535353;
+        }
+        #g-mn {
+                /*设置main为伸缩布局*/
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                flex: 1;
+        }  
+ 
+
+        </style>		
+	</head>
+	<body>
+	    <div id="g-doc">
+        <div id="g-mn"></div>
+        <div id="g-ft">
+			<ul class="bottom">
+			<li onclick="openFrame(this)" data-index='0'><a class="hover">主页</a></li>
+			<li onclick="openFrame(this)" data-index='1'><a  class="s1">陵墓</a></li>
+			<li onclick="openFrame(this)" data-index='2'><a  class="s2">纪念</a></li>
+			<li onclick="openFrame(this)" data-index='3'><a  class="s3">资料</a></li>
+			<li onclick="openFrame(this)" data-index='4'><a  class="s4">更多</a></li>
+			</ul>          
+        </div>
+    </div>
+<!--	<div id="header"></div>
+	<div class="main" style="background-color:#ccc;"></div>
+
+	<div id="stickey_bottom1">
+	<ul class="bottom">
+	<li onclick="openFrame(this)" data-index='0'><a class="hover">主页</a></li>
+	<li onclick="openFrame(this)" data-index='1'><a  class="s1">陵墓</a></li>
+	<li onclick="openFrame(this)" data-index='2'><a  class="s2">纪念</a></li>
+	<li onclick="openFrame(this)" data-index='3'><a  class="s3">资料</a></li>
+	<li onclick="openFrame(this)" data-index='4'><a  class="s4">更多</a></li>
+	</ul>
+	</div>-->
+	<script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.min.js"></script>
+    <script>
+   	apiready=function(){ 
+   		openFrameGroup();
+    };
+    
+    //打开framegroup
+	function openFrameGroup(){
+        api.openFrameGroup({
+            name: 'group_home',
+            rect:{
+	            x:0,
+	            y:0,
+	            w:'auto',
+	            h:api.winHeight-$('.bottom').height()
+            },
+            frames:[{
+            	name:'home',
+            	url:'frm_home_1.html',
+            	pageParam:api.pageParam
+            },{
+            	name:'lingmu',
+            	url:'frm_home_lingmu.html',
+            	pageParam:api.pageParam	            	
+            },{
+            	name:'home_jinian',
+            	url:'frm_home_jinian.html',
+            	scrollToTop:true,
+            	pageParam:api.pageParam
+            },{
+            	name:'profile',
+            	url:'frm_home_profile.html',
+            	scrollToTop:true,
+            	pageParam:api.pageParam
+            },{
+            	name:'more',
+            	url:'frm_home_more.html',
+            	scrollToTop:true,
+            	pageParam:api.pageParam
+            }],
+            scrollEnabled:false,
+            index:0,
+            preload:2
+            
+        },function(ret,err){
+        	
+        });    	
+	}
+	function hideAllFrame() {
+	    api.setFrameAttr({
+	        name: 'profile_detail',
+	        hidden: true
+	    });
+	    api.setFrameAttr({
+	        name: 'profile_edit',
+	        hidden: true
+	    });	
+	    api.setFrameAttr({
+	        name: 'remark',
+	        hidden: true
+	    });	 
+	    api.setFrameAttr({
+	        name: 'relist',
+	        hidden: true
+	    });	 
+	    api.setFrameAttr({
+	        name: 'sacrificelog',
+	        hidden: true
+	    });	 	    	    	        
+	    // api.setFrameGroupAttr({
+	    //     name: 'framegroup01',
+	    //     hidden: true
+	    // });
+	    // api.setFrameGroupAttr({
+	    //     name: 'framegroup02',
+	    //     hidden: true
+	    // });
+	    api.setFrameGroupAttr({
+	        name: 'jngroup',
+	        hidden: true
+	    });	    
+
+	}    	
+	//切换页面
+	function openFrame(obj){
+		try{
+			$(obj).parent().find('.hover').removeClass('hover');
+			api.setFrameGroupIndex({
+                name: 'group_home',
+                index:$(obj).data('index'),
+                reload:true
+            });
+			hideAllFrame();	//隐藏所有frame
+			if($(obj).data('index')==2){
+			    api.setFrameGroupAttr({
+			        name: 'jngroup',
+			        hidden: false
+			    });	    
+
+			}	
+		}catch(e){
+			alert(e);
+		}
+	}
+   		
+    </script>      
+ 	
+	</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<title></title>
+		<style>
+		html,body{height: 100%;}
+		#g-doc{
+			display:-webkit-box;
+			display:-webkit-flex;
+			display:flex;
+			-webkit-box-orient:vertical;
+			-webkit-flex-flow:column;
+			flex-flow:column;
+			height:100%;
+		}
+		#g-hd{
+			width:100%;
+			height:60px;
+			line-height:60px;
+			background-color:#229d63;
+			text-align:center;
+			color:#fff;
+		}		
+		#g-mn{
+			-webkit-box-flex:1;
+			-webkit-flex:1;
+			flex:1;
+		}
+		</style>		
+	</head>
+	<body>
+		<div class="g-doc">
+            <div id="g-hd">资料</div>
+            <div id="g-mn"  onclick="openDetail();">
+<!-- 	            <div class="ziliao" data-index="1" onclick="openDetail(this);">
+	            <div class="ziliao_left"><img src="../image/ziliao1.png"></div>
+	            <div class="ziliao_right">李帆号<p class="huise">出生年月：1985-09-01<br>死亡日期：2267-06-07<br>简介：生前是一名女司机，自然死亡</p></div>
+	            </div>
+	            <div class="ziliao" data-index="1" onclick="openDetail(this);">
+	            <div class="ziliao_left"><img src="../image/ziliao1.png"></div>
+	            <div class="ziliao_right">李帆号<p class="huise">出生年月：1985-09-01<br>死亡日期：2267-06-07<br>简介：生前是一名女司机，自然死亡</p></div>
+	            </div>   -->      	          	
+            </div>
+
+        </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.min.js"></script>    
+    <script>
+	apiready=function(){
+		var header = $api.byId('g-hd');
+		$api.fixIos7Bar(header);
+		$api.fixStatusBar(header);
+		api.setStatusBarStyle({
+	       	style:'dark',
+	       	color:'#6ab494'
+	       });
+
+	    getList();
+	    // api.setFrameGroupAttr({
+	    //     name: 'jngroup',
+	    //     hidden: true
+	    // });	  
+	    api.closeFrameGroup({
+	    	name:'jngroup'
+	    });
+
+	};    
+    function openDetail(){
+    	api.openFrame({
+	        name: 'profile_detail',
+	        url: 'frm_profile.html',
+	        pageParam:api.pageParam,
+	        rect: {
+		        x:0,
+		        y:0,
+		        w:'auto',
+		        h:api.winHeight-60
+	        },
+	        reload:true
+        });
+    }
+	function closeFrame(){
+		api.closeFrame();
+	}  
+	//获取创建的纪念馆列表
+	function getList(){
+		api.showProgress();
+		api.ajax({
+	     url:'http://www.ganhuai.net/json/profile.aspx?number='+api.pageParam.id,
+	     method:'get',
+	     timeout:30,
+	     cache:true,
+	     dataType:'json'
+	 },function(ret,err){
+	 	api.hideProgress();
+	 	if(ret){
+	 		var list="";
+ 		
+ 			list+='<div class="ziliao">';
+            list+='<div class="ziliao_left"><img src="'+ret.img1+'"></div>';
+            list+='<div class="ziliao_right">'+ret.name1+'<p class="huise">出生年月：'+ret.birthDate1+'<br>死亡日期：'+ret.deathDate1+'</p></div></div>';
+			if(ret.peopleCount==2){
+	 			list+='<div class="ziliao">';
+	            list+='<div class="ziliao_left"><img src="'+ret.img2+'"></div>';
+	            list+='<div class="ziliao_right">'+ret.name2+'<p class="huise">出生年月：'+ret.birthDate2+'<br>死亡日期：'+ret.deathDate2+'</p></div></div>';				
+			}	 		
+
+	 		$("#g-mn").html(list);
+
+	 	}else{
+	 		api.alert({
+	         	msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+	         });
+	 	}
+	 });
+	} 	  
+    </script>
+
+	</body>
+</html>

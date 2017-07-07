@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link href="../css/css2.css" rel="stylesheet" type="text/css" />
+	<title></title>
+</head>
+<body>
+		
+<div class="yanzhen" id="header">
+	<div class="sousuo">
+		<div class="sousuo_left"></div>
+		<div class="sousuo_right"><input name="" type="text" class="sousuo_srk" onclick="search();"></div>
+	</div> 
+</div>
+            
+<!--tab切换-->
+<div id="con">
+	<ul id="tags">
+		<li data-index='0' onclick="openFrame1(this)" class="selectTag"><a>私人馆</a></li>
+		<li data-index='1' onclick="openFrame1(this)"><a>名人馆</a></li>
+		<li data-index='2' onclick="openFrame1(this)" style="border:0;"><a>公益馆</a></li>
+	</ul>
+</div>
+<div id="g-mn">
+</div>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/api.js"></script>
+<script>
+apiready=function(){
+	var header=$api.byId('header');
+	$api.fixIos7Bar(header);    	
+	$api.fixStatusBar(header);
+	api.setStatusBarStyle({
+		style: 'dark',
+		color: '#6ab494'
+	});
+	
+	
+	var hdHeight=$('#header').height()+$('#tags').height()+2;
+
+    api.openFrameGroup({
+        name: 'group1',
+        rect:{
+            x:0,
+            y:hdHeight,
+            w:'auto',
+            h:api.winHeight-hdHeight-60
+        },
+        frames:[{
+            name:'tuijian',
+            url:'frm_main_1.html'
+        },{
+            name:'zuiwang',
+            url:'frm_main_2.html'
+        },{
+            name:'zuixin',
+            url:'frm_main_3.html'
+        }],
+        scrollEnabled:false,
+        index:0
+        
+    },function(ret,err){
+ 		//setFrameGroupStatus(ret.index);       
+    });
+};
+
+//切换页面
+function openFrame1(obj){
+    try{
+        $('#tags').find('.selectTag').removeClass('selectTag');
+        $(obj).addClass('selectTag');
+
+        api.setFrameGroupIndex({
+            name: 'group1',
+            index:$(obj).data('index')
+        });
+    }catch(e){
+        alert(e);
+    }
+
+}
+
+function search(){
+	var UISearchBar = api.require('UISearchBar');
+	UISearchBar.open({
+	    placeholder: '搜索被纪念人或馆号',
+	    historyCount: 10,
+	    showRecordBtn: false,
+	    texts: {
+	        cancelText: '取消',
+	        clearText: '清除搜索记录'
+	    },
+	    styles: {
+	        navBar: {
+	            bgColor: '#229d63',
+	            borderColor: '#ccc'
+	        },
+	        searchBox: {
+	            bgImg: '',
+	            color: '#000',
+	            height: 44
+	        },
+	        cancel: {
+	            bg: 'rgba(0,0,0,0)',
+	            color: '#fff',
+	            size: 16
+	        },
+	        list: {
+	            color: '#696969',
+	            bgColor: '#FFFFFF',
+	            borderColor: '#eee',
+	            size: 16
+	        },
+	        clear: {
+	            color: '#000000',
+	            borderColor: '#ccc',
+	            size: 16
+	        }
+	    }
+	},function( ret, err ){
+	    if( ret ){
+	         openSearch(ret.text);
+	         var UISearchBar = api.require('UISearchBar');
+			 UISearchBar.close();
+	    }else{
+	         alert( JSON.stringify( err ) );
+	    } 	    
+	});
+
+}
+function openSearch(key){
+	api.openFrame({
+	    name: 'search',
+	    url: 'frm_search.html',
+	    pageParam:{
+	    	key:key
+	    },
+	    rect: {
+		    x:0,
+		    y:0,
+		    w:'auto',
+		    h:api.winHeight-60
+	    },
+	    reload:true
+    });
+}
+</script>         
+</body>
+</html>

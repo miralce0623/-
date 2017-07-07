@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<title></title>
+	<style>
+	*{margin:0;padding:0;}
+	a{ text-decoration: none; color: #404040;}
+	p,h1,h2,h3,h4,h5,h6{ padding: 0; margin: 0;}
+	img{ border: none;}
+	ul,li{ list-style: none;}	
+	html,body{height:100%;font-family: sans-serif;}
+	.wrap{
+		display:-webkit-box;
+		display:-webkit-flex;
+		display:flex;
+		-webkit-box-orient:vertical;
+		-webkit-flex-flow:column;
+		flex-flow:column;
+		height:100%;
+	}
+	.g-hd{
+		display:-webkit-box;
+		display:-webkit-flex;
+		display:flex;
+		width:100%;
+		height:60px;
+		line-height:60px;
+		background-color:#229d63;
+		text-align:center;
+		color:#fff;
+	}
+	.left{
+		background:url(../image/back1.png) no-repeat center center; 
+		background-size: 40%;
+		width: 60px;
+		height: 60px;
+	}
+	.mid{
+		-webkit-box-flex:1;
+		-webkit-flex:1;
+		flex:1; 
+
+	}
+	.right{
+		width: 60px;
+		height: 60px;
+	}
+
+	.cnt{
+		-webkit-box-flex:1;
+		-webkit-flex:1;
+		flex:1;
+		overflow:auto;
+	}
+	.tab_title{ width: 100%; overflow: hidden; background: #fff;}
+	.tab_title a{ display: block; float: left; width:33.33%; text-align: center; color: #262626; font-size: 1rem; border-bottom: 1px solid #eee; height: 66px; line-height: 66px;}
+	.tab_title a span{ display: block; border-right: 1px solid #eee;height: 40px;line-height: 40px;margin-top: 13px;}
+	.tab_title a.active{ border-bottom: 3px solid #229d63; height: 64px; line-height: 64px;}
+
+
+	</style>
+</head>
+<body>
+<div class="wrap">
+	<div class="g-hd" id="hd">
+		<div class="mid" id="jnTit"></div>	
+	</div>
+	<div class="g-nav">
+		<div class="tab_title">
+		<a data-index="0" onclick="openFrame(this)" class="active"><span>留言问候</span></a>
+		<a data-index="1" onclick="openFrame(this)"><span>悼念文章</span></a>
+		<a data-index="2" onclick="openFrame(this)">祭奠记录</a>
+		</div>		
+	</div>
+	<div class="cnt">
+
+	</div>
+	
+</div>
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script>
+apiready=function(){
+	$('#jnTit').text(api.pageParam.title);
+	var header = $api.byId('hd');
+	$api.fixIos7Bar(header);
+	$api.fixStatusBar(header);
+	api.setStatusBarStyle({
+       	style:'dark',
+       	color:'#6ab494'
+       });
+	
+	openFrameGroup1();
+};
+
+function openFrameGroup1 () {
+	var hdHeight=$('.g-hd').height()+$('.g-nav').height()+2;
+    api.openFrameGroup({
+        name: 'jngroup',
+        rect:{
+            x:0,
+            y:hdHeight,
+            w:'auto',
+            h:api.winHeight-hdHeight-60
+        },
+        frames:[{
+            name:'remark',
+            url:'frm_home_remark.html',
+            pageParam:api.pageParam
+        },{
+            name:'relist',
+            url:'frm_home_relist.html',
+            pageParam:api.pageParam
+        },{
+            name:'sacrificelog',
+            url:'frm_home_sacrificelog.html',
+            pageParam:api.pageParam
+        }],
+        scrollEnabled:false,
+        index:0
+        
+    },function(ret,err){
+     
+    });	
+}
+
+//切换页面
+function openFrame(obj){
+    try{
+    	$(obj).addClass('active').siblings().removeClass('active');	
+        api.setFrameGroupIndex({
+            name: 'jngroup',
+            index:$(obj).data('index'),
+            reload:true
+        });
+    }catch(e){
+        alert(e);
+    }
+
+}  
+
+//function openFrame(index){
+//	switch(index){
+//		case 1:
+//			name="remark";
+//			url="frm_home_remark.html";
+//			break;
+//		case 2:
+//			name="relist";
+//			url="frm_home_relist.html";
+//			break;
+//		case 3:
+//			name="sacrificelog";
+//			url="frm_home_sacrificelog.html";
+//			break;			
+//	}
+//	var hdHeight=$('.g-hd').height()+$('.g-nav').height()+2;
+//	api.openFrame({
+//	    name: name,
+//	    url: url,
+//	    rect: {
+//          x:0,
+//          y:hdHeight,
+//          w:'auto',
+//          h:api.winHeight-hdHeight-60
+//	    },
+//	    reload:true,
+//	    pageParam:api.pageParam
+//  });
+//}		
+</script>
+</body>
+</html>

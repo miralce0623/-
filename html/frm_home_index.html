@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<title></title>
+		<style>
+		*{margin:0;padding: 0;}
+		html,body{height: 100%;font-family: sans-serif;}
+		.sl_div{
+			overflow:hidden;
+			position: relative;
+			width: 100%;
+			background-color: #ccc;
+		}
+
+		.main{ width: 100%; overflow: hidden; position: absolute; top: 0; left: 0;}
+
+		.btn_div{ padding: 0 30px; height: 50px; margin-top:40px; overflow: hidden;}
+		.btn_div a{ display: block; float: left; color: #fff; height: 50px; line-height: 50px; font-size: 28px;border-radius: 5px;padding: 0 10px;}
+		.btn_div a.a1{ background: #229d63;}
+		.btn_div a.a2{ background: #c22121;display: inline;margin-left: 10px;}
+		.btn_div a.a3{ background: #26bc46;float: right;}
+		.btn_div a.a2 img{ padding-right:5px;}
+
+		.slider{ margin: 240px auto 0 !important;}
+		.focus span{width:20px;height:20px;margin-right:10px;border-radius:50%;background:rgba(255,255,255,.4);font-size:0}
+		.focus span.current{background:#fff}
+		.slider a{ display: block; width:237px; height: 361px; margin: 0 auto;}
+		.slider img{ display: block; width:227px; height: 291px; margin: 0 auto; border: 5px solid #fff;}
+		.slider li a span{ display: block; margin: 0 auto; color: #fff; font-size: 34px; text-align: center; font-weight: bold; line-height: 60px;}
+		.slider li .two{ width:606px; margin: 0 auto; overflow: hidden;}
+		.slider li .two a{ display: inline; float: left; margin-left: 44px;}
+
+		.slider li .text{ width: 650px; height: 482px; margin: 0 auto; border: 5px solid #c17e0b; background: #fefcc9;}
+		.slider.slider_text{ margin: 180px auto 0 !important;}
+		.slider li .text p{ color: #857840; font-size: 32px; padding: 30px; line-height: 50px;}
+		</style>
+		<script type="text/javascript" src="../script/wap.js" ></script>
+		<script type="text/javascript" src="../script/jquery-1.11.1.min.js" ></script>
+		
+	</head>
+	<body>
+			<div class="sl_div">
+				<img src="../image/bj1.jpg" class="bj"/>
+ 				<div class="main">
+					<div class="btn_div">
+						<a class="a1">普通馆</a>
+						<a class="a2"><img src="../image/icon4.png" align="absmiddle" />一级</a>
+						<a class="a3">我的亲友馆</a>
+					</div>
+					<div class="slider">
+					  <ul>
+					    <li><a><img src="../image/img.jpg"><span>张三</span></a></li>
+						<li><div class="text"><p>本馆馆号：    117481<br />公共账户：    500铜板<br />创建日期：    2015-10-26 20:58:39<br />创建者   ：     邱华<br />馆   长   ：     邱华<br />管理员：</p></div></li>
+						<li><div class="text"><p>本馆馆号：    117481<br />公共账户：    500铜板<br />创建日期：    2015-10-26 20:58:39<br />创建者   ：     邱华<br />馆   长   ：     邱华<br />管理员：</p></div></li>
+					  </ul>
+					</div>
+
+				</div>
+			</div>
+	  <script type="text/javascript" src="../script/yxMobileSlider.js"></script>
+	  <script>
+	    $(".slider").yxMobileSlider({width:720,height:750,during:5000})
+	    $('#back').click(function(){
+	    	api.openWin({
+	            name: 'index',
+	            url: '../index.html'
+            });
+	    });
+ 		function closeWin(){
+ 			api.closeWin();
+ 		}	    
+	  </script>		
+	</body>
+</html>

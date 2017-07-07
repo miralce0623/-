@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/style1.css"/>
+	<title></title>
+	<style>
+	.neirong p{font-size:14px;}
+	.neirong p span{ color:#4c9d76;}
+	</style>
+</head>
+<body>
+<div id="g-doc">
+	<div id="g-mn">
+		<div class="wupin" id="list">
+		</div> 
+	</div>
+</div>
+<script src="../script/api.js"></script>
+<script src="../script/zepto.min.js"></script>
+<script>
+var pageSize=6; // 页容量
+var totalData=0;  //定义一个变量存储第一次加载返回来的总记录数
+var totalPages=0;  // 定义一个变量存储第一次加载返回来的总页数
+$api.setStorage("currentPage4", 1); // 默认设置为第一页	
+apiready=function(){
+	api.setRefreshHeaderInfo({
+		visible:true,
+		bgColor:'#ccc',
+		textColor:'#fff',
+		textDown:'下拉刷新',
+		textUp:'松开刷新',
+		showTime:true
+    },function(ret,err){
+		getLog(1);
+		api.refreshHeaderLoadDone();	//恢复正常状态 	
+    });
+    
+    api.refreshHeaderLoading();	
+	
+	// 结合上拉刷新：
+	api.addEventListener({
+	        name:'scrolltobottom',
+	        extra:{
+	                threshold:0 //设置距离底部多少距离时触发，默认值为0，数字类型
+	        }
+	},function(ret,err){
+	  var _page=parseInt($api.getStorage("currentPage4"));
+	  if(_page+1<=totalPages){
+	        getLog(_page+1);
+	        $api.setStorage("currentPage4", _page+1); // 页码+1
+	  }
+	  else{
+		     api.toast({
+		         msg:'没有更多数据了！'
+	         }); 
+	  }
+	});
+   
+
+};
+
+//获取纪念动态
+function getLog(page){
+	api.showProgress();
+	api.ajax({
+     url:'http://www.ganhuai.net/json/sacrificelog.aspx?number='+api.pageParam.id+'&pagesize='+pageSize+'&page='+page,
+     method:'get',
+     timeout:30,
+     cache:true,
+     dataType:'json'
+ },function(ret,err){
+ 	api.hideProgress();
+ 	if(ret){
+ 	    totalData=ret.totalData;
+	    totalPages=Math.ceil(ret.totalData/pageSize);
+	    var data=ret.data;	
+ 		var list="";
+ 		if(page>0){list=$("#list").html();}
+ 		for (var i = 0; i < data.length; i++) {
+ 			list+='<div class="wupin_left"><img src="'+data[i].sacrificePhotoPath+'">';
+			list+='<div class="neirong">'+data[i].sacrificeDescName+'<p class="huise">该祭品由<span class="green">'+data[i].nickname+'</span>在'+data[i].datetime+'献上,使用<span class="green">'+data[i].needCoin+'</span>'+data[i].CoinDescName+',有效时间<span class="green">'+data[i].effectiveTime+'</span>,'+data[i].otherStr+'</p></div></div>';
+ 		};
+ 		$("#list").html(list);
+
+ 	}else{
+ 		api.alert({
+         	msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+         });
+ 	}
+ });
+}  		
+</script>
+</body>
+</html>

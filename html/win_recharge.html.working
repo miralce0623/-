@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<title></title>
+            <style>
+            .tip{margin-top:20px;padding:0 10px;font-size:14px;}
+            .tip h4{line-height:28px;}
+            .tip li{line-height:20px;}
+            </style>
+	</head>
+	<body>
+			
+            <div class="yanzhen" id="g-hd">
+            <div class="yanzhen_left" onclick="closeWin();"></div>
+            <div class="yanzhen_mid">充值</div>
+            </div>
+            <div class="chongzhi"><img src="../image/cz.png" width="100%"></div>
+            <div class="danren" onclick="wx_pay(1);">
+            <div class="yanzhen_juti_left">100个感怀币</div>
+            <div class="yanzhen_juti_right red">￥1.00元</div>
+            </div>
+            <div class="danren" onclick="wx_pay(3);">
+            <div class="yanzhen_juti_left">300个感怀币</div>
+            <div class="yanzhen_juti_right red">￥3.00元</div>
+            </div>
+            <div class="danren" onclick="wx_pay(5);">
+            <div class="yanzhen_juti_left">500个感怀币</div>
+            <div class="yanzhen_juti_right red">￥5.00元</div>
+            </div>
+            <div class="danren" onclick="wx_pay(9);">
+            <div class="yanzhen_juti_left">900个感怀币</div>
+            <div class="yanzhen_juti_right red">￥9.00元</div>
+            </div>
+            <div class="tip">
+                  <h4>温馨提示：</h4>
+                  <ul>
+                        <li>1、支付方式：微信支付</li>
+                        <li>2、充值比例：1元=100感怀币</li>
+                  </ul>
+            </div>
+      <script type="text/javascript" src="../script/api.js"></script>   
+      <script>
+      apiready=function(){
+            var header = $api.byId('g-hd');
+            $api.fixIos7Bar(header);
+            $api.fixStatusBar(header);
+            api.setStatusBarStyle({
+                  style:'dark',
+                  color:'#6ab494'
+             });
+
+      };
+      function closeWin () {
+            api.closeWin();
+      }
+      function openWeixin(){
+      	api.openWin({
+	          name: 'weixin',
+	          url: 'weiXin.html'
+          });
+      }
+
+      //微信支付
+      function wx_pay(coin)
+      {
+      	api.showProgress();
+        api.ajax(
+        {
+          //url : "http://192.168.1.51:700/weixin/example/app.php",
+          url : "http://www.ganhuai.net/json/recharge.aspx?username="+api.pageParam.username+"&coin="+coin,
+          method : 'get',
+          timeout : '30',
+          dataType : 'json',
+          returnAll : false,
+          cache :true
+        },
+        function(ret, err) 
+        { 
+            api.hideProgress();
+            if (ret) 
+            {  
+              var tradeno=ret.tradeno;           
+              var wxPay = api.require('wxPay');
+              wxPay.config({
+              }, function(ret, err){
+                  api.hideProgress();
+                   if(ret.status){
+                      wxPay.pay({
+                           description: '充感怀币'+coin*100+'个',
+                           totalFee: coin,
+                           tradeNo: tradeno,
+                           detail: '充值',
+                           attach: '充值',
+                           feeType: 'CNY'
+                      },function(ret, err){
+                           if(ret.status){
+                              alert('支付成功');
+                           }else{
+                              //alert(err.code);
+                              if(err.code=-2){
+                                alert("支付取消");
+                              }else{
+                                alert("支付失败");
+                              }
+                           }
+                      });              
+                   }else{
+                      alert(err.code);
+                   }
+              });
+            }
+            else
+            {
+                api.alert({
+                    msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+                });
+            }
+        });
+        // api.ajax(
+        // {
+        //         //url : "http://192.168.1.51:700/weixin/example/app.php",
+        //         url : "http://www.ganhuai.net/json/wxpay.aspx?username="+api.pageParam.username+"&coin="+coin,
+        //         method : 'POST',
+        //         timeout : '30',
+        //         dataType : 'json',
+        //         returnAll : false,
+        //         cache :true,
+        //         data:
+        //         {
+        //             values:{
+        //                 type:"login"
+
+        //             }
+        //         }
+        // },
+        // function(ret, err) 
+        // {
+        //         api.hideProgress();
+        //         if (ret) 
+        //         {
+                        
+        //                 var back_info=ret;                   
+        //                 var wxPay = api.require('wxPay');
+        //                 wxPay.payOrder({
+        //                     orderId: back_info.prepayid,
+        //                     mchId: back_info.partnerid,
+        //                     nonceStr: back_info.noncestr,
+        //                     timeStamp: back_info.timestamp,
+        //                     package: back_info.package,
+        //                     sign: back_info.sign
+                       
+        //                 }, function(ret, err){
+        //                      if(ret.status){
+        //                         alert('支付成功');
+        //                      }else{
+        //                         alert(err.code);
+        //                      }
+        //                 });
+        //                 // var weiXin = api.require('weiXin');
+        //                 // weiXin.registerApp
+        //                 // (
+        //                 //     function(ret,err)
+        //                 //     {
+        //                 //         if (ret.status)
+        //                 //         {
+        //                 //                 weiXin.payOrder(
+        //                 //                 {
+        //                 //         orderId:back_info.prepayid,
+        //                 //         partnerId:back_info.partnerid,
+        //                 //         nonceStr:back_info.noncestr,
+        //                 //         timeStamp:back_info.timestamp,
+        //                 //         package:back_info.package,        
+        //                 //         sign:back_info.sign
+        //                 //         },function(ret,err)
+        //                 //         {
+        //                 //              if (ret.status) 
+        //                 //              {
+        //                 //                      $alert('支付成功');
+        //                 //              }
+        //                 //              else
+        //                 //              {
+        //                 //                      $alert(err.msg);
+        //                 //              }
+        //                 //         });
+        //                 //         }
+        //                 //         else
+        //                 //         {
+        //                 //                 $alert(err.msg);
+        //                 //         }
+        //                 //     }
+        //                 // );
+
+        //         }
+        //         else
+        //         {
+        //             api.alert({
+        //                 msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+        //             });
+        //         }
+        // });
+      }
+
+
+      </script>		
+	</body>
+</html>

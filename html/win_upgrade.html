@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="email=no" name="format-detection">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style type="text/css">
+    .classSeat{text-align: center; margin-top: 10px;}
+    .classSeat .yseat{ background:url(../image/pingjia2.png) left center no-repeat;}
+    .classSeat .cseat{ background:url(../image/pingjia1.png) left center no-repeat;}
+    .classSeat .nseat{ background:url(../images/noseat.jpg) left center no-repeat;}
+    .seats dl dd{cursor:pointer;float:left; width:32px; height: 50px; background: url(../image/pingjia2.png) left center no-repeat;margin: 0 5px; float:left; border:0; padding:0;}
+    .seats dl dd.active{background: url(../image/pingjia1.png) left center no-repeat; float:left; border:0; padding:0;}
+    .seats dl dd.choosed{cursor:default;background: url(../images/noseat.jpg) left center no-repeat; border:0; padding:0;}
+    </style>
+
+    <title></title>
+</head>
+<body>
+<div class="yanzhen" id="g-hd">
+    <div class="yanzhen_left" onclick="closeWin();"></div>
+    <div class="yanzhen_mid">升级为高级馆</div>
+</div>
+<div class="pay"><P class="huise">目前余额为<span id="hasCoin">0</span>个感怀币</P></div>
+<div id="levellist"></div>
+<!-- <div class="geren">
+<div class="seats">
+<dl class="clearFix" style="margin:0;">
+<dd class="sh" data-level-number="1"></dd>
+</dl>
+</div>
+一级馆  需要293.2个感怀币
+</div>
+<div class="geren">
+<div class="seats">
+<dl class="clearFix" style="margin:0;">
+<dd class="sh" data-level-number="2"></dd>
+</dl>
+</div>
+二级馆  需要399.2个感怀币
+</div> -->
+<input type="hidden" name="levelnumber" id="levelnumber">
+<a href="#" id="upgrade" class="xiayibu2" onclick="doUpgrade();">确认升级</a>
+<a href="#" class="xiayibu2" onclick="openRecharge();">我要充值</a>
+<script src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>   
+<script>
+    apiready=function(){
+        var header = $api.byId('g-hd');
+        $api.fixIos7Bar(header);
+        $api.fixStatusBar(header);
+        api.setStatusBarStyle({
+              style:'dark',
+              color:'#6ab494'
+         });
+
+        // 判断用户是否登录
+        api.getPrefs({
+                key : 'userinfo' // 用户信息key
+        }, function(ret, err) {
+                var val = ret.value;
+                if (val && val != "") {
+                    username = typeof val == "string" ? val : JSON.stringify(val);
+                    getInfo(username);
+                } else {
+                    api.openWin({
+                        name: 'login',
+                        url: 'win_login.html'
+                    });
+                }
+        });
+
+
+     
+    };
+
+
+  $('#levellist').html(htmlStr);
+
+    function closeWin(){
+        api.closeWin();
+    }
+    function openRecharge(){
+    	api.openWin({
+	        name: 'recharge',
+	        url: 'win_recharge.html',
+            pageParam: api.pageParam
+        });
+    }
+    //获取纪念馆级别
+  function getInfo(){
+  	api.showProgress();
+    api.ajax({
+             url:'http://www.ganhuai.net/json/upgradeUI.aspx?username='+username,
+             method:'get',
+             timeout:30,
+             cache:true,
+             dataType:'json'
+           },function(ret,err){
+           	api.hideProgress();
+            if(ret){
+                var htmlStr;
+                htmlStr="";
+                $("#hasCoin").html(ret.hasCoin);
+                for (var i = 0; i < ret.levellist.length; i++) {
+                    htmlStr+='<div class="geren"><div class="seats"><dl class="clearFix" style="margin:0;"><dd class="sh" data-level-number="'+ret.levellist[i].LevelNumber+'"></dd></dl></div>';
+                    htmlStr+=ret.levellist[i].DescName+'  需要'+ret.levellist[i].NeedCoin/100+'个感怀币';
+                    htmlStr+='</div>';
+
+                }
+                $('#levellist').html(htmlStr);
+                choose();
+              }else{
+                api.alert({
+                    msg:('错误码1：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+                });
+            }
+           });
+  }  
+
+//确认升级
+function doUpgrade(){
+  api.showProgress();
+  api.ajax({
+        url:'http://www.ganhuai.net/json/upgrade.aspx?number='+api.pageParam.id,
+        method:'post',
+        dataType:'json',
+        returnAll:false,
+        data:{
+            values:{
+                  username:$api.getStorage("username"),
+                  levelnumber:$("#levelnumber").val()
+            }
+        }
+  },function(ret,err){
+  	api.hideProgress();
+    if(ret){
+      //alert(JSON.stringify(ret));
+      
+      alert(ret.result);    
+      closeWin();      //关闭frame
+        
+          
+    }else{
+      api.alert({
+        msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+      });
+    }
+
+  });  
+}
+
+function choose(){
+  $('.seats dd').click(function(){
+    var isActive = $(this).hasClass('active'),
+      isChoosed = $(this).hasClass('choosed');
+    $(".seats dd").removeClass('active');
+    //alert($(this).data('level-number'));
+    $("#levelnumber").val($(this).data('level-number'));
+    
+    if(isChoosed) return;
+    $(this).attr('class',isActive ? '' : 'active');
+  });
+}
+</script>
+</body>
+</html>

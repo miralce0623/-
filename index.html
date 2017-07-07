@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+        <meta content="telephone=no" name="format-detection">
+        <meta content="email=no" name="format-detection">
+        <meta content="yes" name="apple-mobile-web-app-capable">
+        <meta content="black" name="apple-mobile-web-app-status-bar-style">
+        <title>感怀</title>
+        <style>
+        *{margin:0;padding:0;}
+        body{ font-family: "微软雅黑"; margin: 0; padding: 0; background:#f8f8f8; color: #404040;}
+        a{ text-decoration: none; color: #404040;}
+        img{ border: none;}
+        ul,li{ list-style: none;}        
+        html,body{height:100%;}
+
+        #g-doc {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                /* 下面三个控制子div的显示方式，是垂直显示 */
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                flex-flow: column;
+                /* 上面三个控制子div的显示方式，是垂直显示 */
+                height: 100%;
+        }
+        #g-ft {
+                height: 60px;/*固定尾部*/
+                background:#535353;
+        }
+        #g-mn {
+                /*设置main为伸缩布局*/
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                flex: 1;
+        }  
+        #g-ft .nav{
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                width: 100%;            
+        }   
+        #g-ft .nav li{
+            -webkit-box-flex:1;
+            -webkit-flex:1;
+            flex:1;
+        }   
+         /********************/
+         /* 底部按钮原始样式 */
+         /********************/
+         .btn{display:block;width:100%;height:40px;padding-top:35px;text-align: center; color:#a9a9a9;}
+         .btn1 {background:url(./image/d1.png) no-repeat center 5px;}
+         .btn2 {background:url(./image/d2.png) no-repeat center 5px;}
+         .btn3 {background:url(./image/d3.png) no-repeat center 5px;}
+         .btn4 {background:url(./image/d4.png) no-repeat center 5px;}
+
+         
+         /* 底部按钮激活样式 */
+         .active{color:#229d63;}
+         .btn1.active {background:url(./image/d1_press.png) no-repeat center 5px;}
+         .btn2.active {background:url(./image/d2_press.png) no-repeat center 5px;}
+         .btn3.active {background:url(./image/d3_press.png) no-repeat center 5px;}
+         .btn4.active {background:url(./image/d4_press.png) no-repeat center 5px;} 
+        </style>
+</head>
+<body>
+    <div id="g-doc">
+        <div id="g-mn"></div>
+        <div id="g-ft">
+            <ul class="nav">
+            <li><a class="btn btn1" data-index='0' onclick="openFrame(this)">我在纪念</a></li>
+            <li><a class="btn btn2 active" data-index='1' onclick="openFrame(this)">广场</a></li>
+            <li ><a class="btn btn3"data-index='2' onclick="openFrame(this)">个人主页</a></li>
+            <li><a class="btn btn4" data-index='3' onclick="openFrame(this)">关于</a></li>
+            </ul>            
+        </div>
+    </div>
+    <script type="text/javascript" src="./script/api.js"></script>
+    <script type="text/javascript" src="./script/zepto.min.js"></script>
+    <script>
+        var username="";        
+        apiready=function(){ 
+            // 判断用户是否登录
+            api.getPrefs({
+                key : 'userinfo' // 用户信息key
+            }, function(ret, err) {
+                var val = ret.value;
+                if (val && val != "") {
+                    username = typeof val == "string" ? val : JSON.stringify(val);  
+                    //openFrameGroup(username);                         
+                    //alert( typeof val == "string" ? val : JSON.stringify(val));
+                } else {
+                    //alert("用户未登录");
+                    api.openWin({
+                        name: 'login',
+                        url: 'html/win_login.html'
+                    });
+                }
+
+            });  
+     
+            api.addEventListener({
+                    name : 'reg_login_successEvent'
+            }, function(ret) {
+                       if (ret && ret.value) {
+                           //var value = ret.value;
+                            //alert(JSON.stringify(value));
+                             
+                       }
+            });    
+
+			openFrameGroup();
+        };
+
+		function openFrameGroup(){
+            api.openFrameGroup({
+                name: 'group',
+                rect:{
+                    x:0,
+                    y:0,
+                    w:'auto',
+                    h:api.winHeight-$('#g-ft').height()
+                },
+                frames:[{
+                    name:'jinian',
+                    url:'html/frm_jinian.html'
+                },{
+                    name:'main',
+                    url:'html/frm_main.html'
+                },{
+                    name:'home',
+                    url:'html/frm_home.html'
+                },{
+                    name:'about',
+                    url:'html/frm_about.html'
+                }],
+                scrollEnabled:false,
+                index:1
+                
+            },function(ret,err){
+                
+            });
+		
+		}
+        function hideAllFrame() {
+               api.setFrameAttr({
+                   name: 'search',
+                   hidden: true
+               });
+               api.setFrameAttr({
+                   name: 'search_result',
+                   hidden: true
+               });     
+            // api.setFrameAttr({
+            //     name: 'third_frame',
+            //     hidden: true
+            // });
+            api.setFrameGroupAttr({
+                name: 'group1',
+                hidden: true
+            });
+            // api.setFrameGroupAttr({
+            //     name: 'framegroup02',
+            //     hidden: true
+            // });
+            // api.setFrameAttr({
+            //     name: 'forth_frame',
+            //     hidden: true
+            // });
+            // api.setFrameAttr({
+            //     name: 'frame0301',
+            //     hidden: true
+            // });
+            // api.setFrameAttr({
+            //     name: 'frame0302',
+            //     hidden: true
+            // });
+        }         
+        
+        //切换页面
+        function openFrame(obj){
+            try{
+                hideAllFrame();
+                if($(obj).data('index')==1){
+                    api.setFrameGroupAttr({
+                        name: 'group1',
+                        hidden: false
+                    });
+                }
+                $('#g-ft').find('.active').removeClass('active');
+                $(obj).addClass('active');
+
+                api.setFrameGroupIndex({
+                    name: 'group',
+                    index:$(obj).data('index'),
+                    reload:true
+                });
+            }catch(e){
+                alert(e);
+            }
+
+        }
+        
+     
+    </script>          
+</body>
+</html>

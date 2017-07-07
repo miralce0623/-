@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <meta charset="utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+      <meta content="telephone=no" name="format-detection">
+      <meta content="email=no" name="format-detection">
+      <meta content="yes" name="apple-mobile-web-app-capable">
+      <meta content="black" name="apple-mobile-web-app-status-bar-style">
+      <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+      <title></title>
+      <style>
+      html,body{height:100%;}
+      #g-doc{
+      display:-webkit-box;
+      display:-webkit-flex;
+      display:flex;
+      -webkit-box-orient:vertical;
+      -webkit-flex-flow:column;
+      flex-flow:column;
+      height:100%;
+      }
+
+      #g-mn{
+      -webkit-box-flex:1;
+      -webkit-flex:1;
+      flex:1;
+      overflow:auto;
+      }
+      </style>
+</head>
+<body>
+<div id="g-doc">
+      <div class="yanzhen" id="g-hd">
+            <div class="yanzhen_left" onclick="closeWin();"></div>
+            <div class="yanzhen_mid">购物车</div>
+            <div class="yanzhen_right2"></div>
+      </div>     
+      <div class="pay">升级高级馆可节省10个铜板</div>             
+      <div id="g-mn">                      
+            <div class="gouwuche1">
+                  <div class="gouwuche_left"><img src="../image/13.png"></div>
+                  <div class="gouwuche_mid">基础套菜<p class="huise">总价：173个铜板<br>套餐无统一时效</p></div>
+                  <div class="gouwuche_right"><em class="red">套餐</em></div>
+            </div>
+            <div class="gouwuche1">
+                  <div class="gouwuche_left"><img src="../image/13.png"></div>
+                  <div class="gouwuche_mid">基础套菜<p class="huise">总价：173个铜板<br>套餐无统一时效</p></div>
+                  <div class="gouwuche_right"><em class="red">套餐</em></div>
+            </div>
+                        <div class="gouwuche1">
+                  <div class="gouwuche_left"><img src="../image/13.png"></div>
+                  <div class="gouwuche_mid">基础套菜<p class="huise">总价：173个铜板<br>套餐无统一时效</p></div>
+                  <div class="gouwuche_right"><em class="red">套餐</em></div>
+            </div>
+                        <div class="gouwuche1">
+                  <div class="gouwuche_left"><img src="../image/13.png"></div>
+                  <div class="gouwuche_mid">基础套菜<p class="huise">总价：173个铜板<br>套餐无统一时效</p></div>
+                  <div class="gouwuche_right"><em class="red">套餐</em></div>
+            </div>
+                        <div class="gouwuche1">
+                  <div class="gouwuche_left"><img src="../image/13.png"></div>
+                  <div class="gouwuche_mid">基础套菜<p class="huise">总价：173个铜板<br>套餐无统一时效</p></div>
+                  <div class="gouwuche_right"><em class="red">套餐</em></div>
+            </div>
+                        <div class="gouwuche1">
+                  <div class="gouwuche_left"><img src="../image/13.png"></div>
+                  <div class="gouwuche_mid">基础套菜<p class="huise">总价：173个铜板<br>套餐无统一时效</p></div>
+                  <div class="gouwuche_right"><em class="red">套餐</em></div>
+            </div>
+                        <div class="gouwuche1">
+                  <div class="gouwuche_left"><img src="../image/13.png"></div>
+                  <div class="gouwuche_mid">基础套菜<p class="huise">总价：173个铜板<br>套餐无统一时效</p></div>
+                  <div class="gouwuche_right"><em class="red">套餐</em></div>
+            </div>            
+      </div>
+      <div style="height:50px;"></div>
+      <div id="stickey_bottom">
+            <div class="footer">
+            <div class="footer_left">共需支付200个铜板  x2</div>
+            <div class="footer_right"><a href="javascript:openPay();" class="button">结 算</a></div>
+            </div>
+      </div>  
+
+</div>
+<script type="text/javascript" src="../script/api.js"></script>   
+<script>
+apiready=function(){
+      var header = $api.byId('g-hd');
+      $api.fixIos7Bar(header);
+      $api.fixStatusBar(header);
+      api.setStatusBarStyle({
+            style:'dark',
+            color:'#6ab494'
+       });
+    
+};
+function closeWin(){
+	api.closeWin();
+}
+function openPay () {
+	api.openWin({
+	    name: 'pay',
+	    url: 'win_pay.html'
+    });
+}
+</script>     
+</body>
+</html>

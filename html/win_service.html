@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+	<title></title>
+	<style>
+	html,body{height:100%;}
+	#g-doc{
+		display:-webkit-box;
+		display: -webkit-flex;
+		display:flex;
+		
+		-webkit-box-orient:vertical;
+		-webkit-flex-flow:column;
+		flex-flow:column;
+	}
+	#g-mn{
+		-webkit-box-flex:1;
+		-webkit-flex:1;
+		flex:1;
+		padding:10px;
+		overflow: auto;
+	}
+	#g-hd{
+		display: -webkit-box;
+		display: -webkit-flex;
+		display:flex;
+		
+		width:100%;
+		height: 60px;
+		background:#229d63; 
+	}
+	#g-hd .left{
+		width:60px;
+		background:url(../image/back1.png) no-repeat center center;
+		background-size:24px 24px;
+	}
+
+	#g-hd .mid{
+		-webkit-box-flex:1;
+		-webkit-flex:1;	
+		flex:1;
+		line-height: 60px;
+		color: #fff;
+		font-size:18px;
+		text-align: center;
+	}
+	#g-hd .right{
+		width:60px;
+	}		
+	
+	#g-mn #title{font-size:20px;text-align: center;line-height: 40px;}
+	#g-mn .from{padding:10px 0;text-align: center;font-size:12px;}
+	#g-mn .from #addDateTime{margin-left:15px;}
+
+	#g-mn .cnt{margin:15px auto;line-height:1.2em;}
+	#g-mn .cnt p{margin-bottom:15px;}
+
+	.green{ color:#4c9d76;}	
+	</style>
+</head>
+<body>
+		
+<div id="g-doc">
+	<div id="g-hd">
+		<div class="left" onclick="closeWin();"></div>
+		<div class="mid">服务条款</div>
+		<div class="right"></div>
+	</div>
+
+	<div id="g-mn">
+		<div class="cnt" id="content">
+			<p>感怀为全球范围内所有人士提供网络纪念服务，不论其国籍、种族、职业、信仰、身份等有何不同。但您必须接受并遵守以下服务条款方能享受到全方位的优质服务。</p>
+			<p>1.尊重逝者和道德法则是您必须要遵守的原则和建馆的前提。</p>
+			<p>2.您需要对自己所建的陵园负全部责任，并是以纪念逝者为目的的善意行为，方可建立陵园。</p>
+			<p>3.不得使用对逝者不敬的方式和文字，本网站一经发现或接到相关举报，经查实后将会采取关闭或删除该陵园等行动而不需告知该用户。如果情节严重，造成不良影响和后果的，本网站将保留诉诸于法律解决的权利。 </p>
+			<p>4.因重大犯罪或政治原因而死亡，存在严重不良影响的人物，不得在本网站为其建立陵园，一经发现本网站将立即停止对该陵园一切相关服务而不需告知该用户。</p>
+			<p>5.因建陵园引起的相关法律或矛盾纠纷由建馆者承担，本网站不承担任何责任。
+</p>
+		</div>
+	</div>
+</div>
+
+            
+
+<script src="../script/zepto.min.js"></script>
+<script src="../script/api.js"></script>
+<script>
+apiready=function(){
+	var header=$api.byId('g-hd');
+	$api.fixIos7Bar(header);    	
+	$api.fixStatusBar(header);
+	api.setStatusBarStyle({
+		style: 'dark',
+		color: '#6ab494'
+	});
+	
+	
+ 
+};
+
+
+
+function closeWin(){
+	api.closeWin();
+}
+</script>         
+</body>
+</html>

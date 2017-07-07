@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<title></title>
+            <style>
+            html,body{height:100%;}
+            #g-doc{
+                  display:-webkit-box;
+                  display:-webkit-flex;
+                  display:flex;
+                  -webkit-box-orient:vertical;
+                  -webkit-flex-flow:column;
+                  flex-flow:column;
+                  height:100%;
+            }            
+
+            #g-mn{
+                  -webkit-box-flex:1;
+                  -webkit-flex:1;
+                  flex:1;
+                  overflow:auto;
+            }
+
+            </style>              
+	</head>
+	<body>
+	<div id="g-doc">
+            <div class="yanzhen" id="g-hd">
+                  <div class="yanzhen_left" onclick="closeWin();"></div>
+                  <div class="yanzhen_mid">敬献详情</div>
+            </div>  
+            <div id="g-mn"></div>          
+      </div>	
+      <script src="../script/zepto.min.js"></script>      
+      <script src="../script/api.js"></script>
+      <script>
+      apiready=function(){
+            var header = $api.byId('header');
+            $api.fixIos7Bar(header);
+            $api.fixStatusBar(header);
+            api.setStatusBarStyle({
+                  style:'dark',
+                  color:'#6ab494'
+             });
+          
+          getInfo(271802444);
+      };   
+
+ 	function closeWin(){
+ 		api.closeWin();
+ 	}
+      //获取敬献详情
+      function getInfo(id){
+           api.showProgress();
+           api.ajax({
+           url:'http://192.168.1.51:8080/ganhuai/jingxian.php?id='+id,
+           method:'get',
+           timeout:30,
+           cache:true,
+           dataType:'json'
+       },function(ret,err){
+            api.hideProgress();
+            if(ret){
+                  var info="";
+                  info+='<div class="zhanshi"><img src="'+ret.img+'"></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">敬献编号</div><div class="yanzhen_juti_right bianyuan">'+ret.id+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">名称</div><div class="yanzhen_juti_right bianyuan">'+ret.name+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">纪念类型</div><div class="yanzhen_juti_right bianyuan">'+ret.type+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">敬献者</div><div class="yanzhen_juti_right bianyuan">'+ret.username+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">敬献时间</div><div class="yanzhen_juti_right bianyuan">'+ret.time+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">剩余时效</div><div class="yanzhen_juti_right bianyuan">'+ret.remainingTime+'</div></div>';
+                  info+='<div class="danren"><div class="yanzhen_juti_left">敬献者留言</div><div class="yanzhen_juti_right bianyuan">'+ret.message+'</div></div>';
+
+                
+
+                  $("#g-mn").html(info);
+
+            }else{
+                  api.alert({
+                  msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+               });
+            }
+       });
+      }        
+ 	</script>
+	</body>
+</html>

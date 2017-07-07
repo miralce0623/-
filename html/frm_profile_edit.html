@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<title></title>
+		<style>
+        html,body{height:100%;}
+        #g-doc{
+              display:-webkit-box;
+              display:-webkit-flex;
+              display:flex;
+              -webkit-box-orient:vertical;
+              -webkit-flex-flow:column;
+              flex-flow:column;
+              height:100%;
+        }            
+
+        #g-mn{
+              -webkit-box-flex:1;
+              -webkit-flex:1;
+              flex:1;
+              overflow:auto;
+        }
+		</style>
+	</head>
+	<body>
+	<div id="g-doc">
+        <div class="yanzhen" id="g-hd">
+        <div class="yanzhen_left" onclick="closeFrame();" ></div>
+        <div class="yanzhen_mid">编辑资料</div>
+        <div class="yanzhen_right" id="save">保存</div>
+        </div>
+        <div id="g-mn">
+        	<input id="pc" name="pc" type="hidden" value="">
+        	<div id="first">
+	        	<div class="zhanshi">
+	        		<div class="imgArea">
+	        			<img id="img" src="">
+	        			<span onclick="uploadPhoto('img','photopath');">更新头像</span>
+	        			<input type="hidden" id="photopath" />
+	        		</div>
+	        	</div>
+	            <div class="danren">
+	            <div class="yanzhen_juti_left huise">你想纪念谁</div>
+	            <div class="yanzhen_juti_right"><input name="lastname" id="lastname" type="text" class="srk txtCenter"></div>
+	            </div>
+	            <div class="danren">
+	            <div class="yanzhen_juti_left huise">性别</div>
+	            <div class="yanzhen_juti_right txtCenter">
+	            <input name="gender" type="radio" value="2" checked  onclick="$('#gender').val(this.value)" /> 男
+	            <input name="gender" type="radio" value="1" onclick="$('#gender').val(this.value)" /> 女
+	            <input id="gender" type="hidden" value="2" />
+	            </div>
+	            </div>
+		        <div class="danren" onclick="selectDate('birthDate')">
+	            <div class="yanzhen_juti_left huise">生辰</div>
+	            <div class="yanzhen_juti_right"><input name="birthDate" id="birthDate" type="text" class="srk1"></div>
+	            </div>         		
+	 	        <div class="danren" onclick="selectDate('deathDate')">
+	            <div class="yanzhen_juti_left huise">忌日</div>
+	            <div class="yanzhen_juti_right"><input name="deathDate" id="deathDate" type="text" class="srk1"></div>
+	            </div>         		
+	        </div>      
+			<div id="second" style="display:none;">
+				<div class="zhanshi">
+					<div class="imgArea">
+	        			<img id="img1" src="">
+	        			<span onclick="uploadPhoto('img1','photopath1');">更新头像</span>
+	        			<input type="hidden" id="photopath1" />
+	        		</div>
+				</div>
+	            <div class="danren juli huise">
+	            <div class="yanzhen_juti_left">您想纪念谁</div>
+	            <div class="yanzhen_juti_right"><input name="lastname1" id="lastname1" type="text" class="srk txtCenter"></div>
+	            </div>
+	            <div class="danren huise">
+	            <div class="yanzhen_juti_left">性别</div>
+	            <div class="yanzhen_juti_right txtCenter">            
+	            <input name="gender1" type="radio" value="2" checked  onclick="$('#gender1').val(this.value)" /> 男
+	            <input name="gender1" type="radio" value="1" onclick="$('#gender1').val(this.value)" /> 女
+	            <input id="gender1" type="hidden" value="2" /></div>
+	            </div>		
+		        <div class="danren" onclick="selectDate('birthDate1')">
+	            <div class="yanzhen_juti_left huise">生辰</div>
+	            <div class="yanzhen_juti_right"><input name="birthDate1" id="birthDate1" type="text" class="srk1"></div>
+	            </div>         		
+	 	        <div class="danren" onclick="selectDate('deathDate1')">
+	            <div class="yanzhen_juti_left huise">忌日</div>
+	            <div class="yanzhen_juti_right"><input name="deathDate1" id="deathDate1" type="text" class="srk1"></div>
+	            </div>         		
+	        	</div>  	            		
+			</div>
+
+
+<!--              <div class="danren">
+            <div class="yanzhen_juti_left huise">性别</div>
+            <div class="yanzhen_juti_right"><input name="gender" id="gender" type="text" class="srk1"></div>
+            </div>
+             <div class="danren">
+            <div class="yanzhen_juti_left huise">别名</div>
+            <div class="yanzhen_juti_right"><input name="" type="text" class="srk1"></div>
+            </div>
+             <div class="danren">
+            <div class="yanzhen_juti_left huise">民族</div>
+            <div class="yanzhen_juti_right"><input name="" type="text" class="srk1"></div>
+            </div>
+             <div class="danren">
+            <div class="yanzhen_juti_left huise">职业</div>
+            <div class="yanzhen_juti_right"><input name="" type="text" class="srk1"></div>
+            </div>
+            <div class="danren">
+            <div class="yanzhen_juti_left huise">籍贯</div>
+            <div class="yanzhen_juti_right"><input name="" type="text" class="srk1"></div>
+            </div>
+            <div class="danren">
+            <div class="yanzhen_juti_left huise">城市</div>
+            <div class="yanzhen_juti_right"><input name="" type="text" class="srk1"></div>
+            </div>
+            <div class="danren">
+            <div class="yanzhen_juti_left huise">纪念关系</div>
+            <div class="yanzhen_juti_right"><input name="" type="text" class="srk1"></div>
+            </div>
+            <div class="danren">
+            <div class="yanzhen_juti_left huise">生辰</div>
+            <div class="yanzhen_juti_right"><input name="" type="text" class="srk1"></div>
+            </div>
+             <div class="danren">
+            <div class="yanzhen_juti_left huise">出生地点</div>
+            <div class="yanzhen_juti_right"><input name="" type="text" class="srk1"></div>
+            </div>   -->         
+        </div>
+
+		</div>		
+	<script type="text/javascript" src="../script/zepto.min.js"></script>   
+	<script type="text/javascript" src="../script/api.js"></script>    
+	<script>
+	apiready=function(){
+	    var header = $api.byId('g-hd');
+	    $api.fixIos7Bar(header);
+	    $api.fixStatusBar(header);
+	    api.setStatusBarStyle({
+	          style:'dark',
+	          color:'#6ab494'
+	     });
+
+		getInfo();
+	};
+	
+      //获取被纪念人信息
+      function getInfo(){
+      	api.showProgress();
+            api.ajax({
+           url:'http://www.ganhuai.net/json/profile.aspx?number='+api.pageParam.id,
+           method:'get',
+           timeout:30,
+           cache:true,
+           dataType:'json'
+       },function(ret,err){
+       		api.hideProgress();
+            if(ret){
+                  // var info="";
+                  // info+='<div class="zhanshi"><img src="'+ret.img1+'"></div>';
+                  // info+='<div class="danren"><div class="yanzhen_juti_left">姓名</div><div class="yanzhen_juti_right bianyuan">'+ret.name1+'</div></div>';
+                  // info+='<div class="danren"><div class="yanzhen_juti_left">性别</div><div class="yanzhen_juti_right bianyuan">'+ret.gender1+'</div></div>';
+                  // info+='<div class="danren"><div class="yanzhen_juti_left">生辰</div><div class="yanzhen_juti_right bianyuan">'+ret.birthDate1+'</div></div>';
+                  // info+='<div class="danren"><div class="yanzhen_juti_left">忌日</div><div class="yanzhen_juti_right bianyuan">'+ret.deathDate1+'</div></div>';
+                  // if(ret.peopleCount==2){
+                  // info+='<div class="zhanshi"><img src="'+ret.img2+'"></div>';
+                  // info+='<div class="danren"><div class="yanzhen_juti_left">姓名</div><div class="yanzhen_juti_right bianyuan">'+ret.name2+'</div></div>';
+                  // info+='<div class="danren"><div class="yanzhen_juti_left">性别</div><div class="yanzhen_juti_right bianyuan">'+ret.gender2+'</div></div>';
+                  // info+='<div class="danren"><div class="yanzhen_juti_left">生辰</div><div class="yanzhen_juti_right bianyuan">'+ret.birthDate2+'</div></div>';
+                  // info+='<div class="danren"><div class="yanzhen_juti_left">忌日</div><div class="yanzhen_juti_right bianyuan">'+ret.deathDate2+'</div></div>';                    
+                  // }                  
+                  // info+='<div class="danren"><div class="yanzhen_juti_left">安葬地点</div><div class="yanzhen_juti_right bianyuan">'+ret.deathPlace+'</div></div>';
+                  //info+='<div class="danren"><div class="yanzhen_juti_left">生平简介</div><div class="yanzhen_juti_right bianyuan">'+ret.biography+'</div></div>';
+                  $("#pc").val(ret.peopleCount);
+
+			      $("#photopath").val(ret.img1);
+			      $("#img").attr('src',ret.img1);
+                  $("#lastname").val(ret.name1);
+                  $("#birthDate").val(ret.birthDate1);                  
+			      $("#deathDate").val(ret.deathDate1);     
+                  if(ret.peopleCount==2){
+                  	$("#second").show();
+				      $("#photopath1").val(ret.img2);
+			 	     $("#img1").attr('src',ret.img2);                  
+                  	$("#lastname1").val(ret.name2);	
+	                  $("#birthDate1").val(ret.birthDate2);                  
+				      $("#deathDate1").val(ret.deathDate2);    
+                  }
+
+            }else{
+                  api.alert({
+                  msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+               });
+            }
+       });
+      }    
+    
+    function uploadPhoto(domID1,domID2){
+    	api.getPicture({
+                    sourceType: 'library',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'url',
+                    allowEdit: true,
+                    //quality: 50,
+                    //targetWidth:100,
+                    //targetHeight:100,
+                    saveToPhotoAlbum: false    	
+        },function(ret,err){
+        	if(ret){
+        		if(ret.data!=""){
+	        		api.showProgress();
+	        		api.ajax({
+		                url:'http://www.ganhuai.net/json/upload.aspx',
+		                method:'post',
+		                timeout:100,
+		                data:{
+		                	files:{
+		                		upfile : ret.data
+		                	}
+		                },
+	                    dataType : 'json',
+	                },function(ret,err){
+	                    api.hideProgress();
+	                    if(ret){
+		                	//alert(JSON.stringify(ret));
+		                	$('#'+domID1).attr('src',ret.photopath);
+		                	$('#'+domID2).val(ret.photopath);
+		                }else{
+		                	api.alert({msg:err.msg});
+		                }
+	                });
+        		}
+        	}else{
+        		api.alert({msg:err.msg});
+        	}
+        });
+    }  
+    
+    function selectDate(domID){
+    	api.openPicker({
+		    type: 'date',
+		    date: '2016-01-01',
+		    title: '选择日期'
+		},function( ret, err ){
+		    if( ret ){
+		         $('#'+domID).val(ret.year+'-'+ret.month+'-'+ret.day);
+		    }else{
+		         alert( JSON.stringify( err ) );
+		    }
+		});
+    }
+
+	//创建纪念馆
+	$("#save").click(function () {
+	  var title=$("#title");
+	  var lastname=$("#lastname");
+	  var gender=$('#gender');
+	  var photopath=$('#photopath');
+	  var lastname1=$("#lastname1");
+	  var gender1=$('#gender1');
+	  var photopath1=$('#photopath1');	
+	  var pc=$('#pc');  
+	  if(title.val()==""){
+	      title.focus();
+	      api.toast({
+	              msg : '请输入纪念馆名称'
+	      });
+	      return;    
+	  }
+
+	  if(lastname.val()==""){
+	      lastname.focus();
+	      api.toast({
+	              msg : '请输入第一个被纪念人的姓名'
+	      });
+	      return;    
+	  }  
+	  if(pc.val()==2){
+		  if(lastname1.val()==""){
+		      lastname1.focus();
+		      api.toast({
+		              msg : '请输入第二个被纪念人的姓名'
+		      });
+		      return;    
+		  }  	
+	  }  
+
+	  api.ajax({
+		  url:'http://www.ganhuai.net/json/editHall.aspx?number='+api.pageParam.id,
+		  method:'post',
+		  dataType:'json',
+		  returnAll:false,
+		  data:{
+		  	values:{
+		  		title:title.val(),
+		  		lastname:lastname.val(),
+		  		gender:gender.val(),
+		  		photopath:photopath.val(),
+		  		birthDate:$('#birthDate').val(),
+		  		deathDate:$('#deathDate').val(),		  		
+		  		lastname1:lastname1.val(),
+		  		gender1:gender1.val(),	
+		  		photopath1:photopath1.val(),	  	
+		  		birthDate1:$('#birthDate1').val(),
+		  		deathDate1:$('#deathDate1').val(),		  			
+		  		pc:pc.val()
+		  	}
+		  }
+	  },function(ret,err){
+	    if(ret){
+	      //alert(JSON.stringify(ret));
+	      if(ret.flag==1){
+	             api.toast({
+		             msg:'资料修改成功！'
+	             });       
+	
+	        closeFrame();      //关闭frame
+	      } 
+	      if(ret.flag==2){
+	             api.toast({
+		             msg:'资料修改成功，该纪念馆需审核后方可公开访问！'
+	             });       
+	
+	        closeFrame();      //关闭frame
+	        
+	      }      
+	    }else{
+	      api.alert({
+	        msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+	      });
+	    }
+	
+	  });
+	});
+    
+	function closeFrame(){		
+		api.openFrame({
+	        name: 'profile',
+	        url: 'frm_profile.html',
+	        pageParam:api.pageParam,	        
+	        rect: {
+		        x:0,
+		        y:0,
+		        w:'auto',
+		        h:api.winHeight-60
+	        },
+	        reload:true
+        });
+        api.closeFrame();
+	}
+	</script>
+	</body>
+</html>

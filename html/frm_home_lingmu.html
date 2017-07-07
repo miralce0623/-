@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<title></title>
+		<style>
+		*{padding:0;margin:0;}
+		html,body{height:100%;}
+		.wrap{width:720px;height:100%;margin:0 auto;}
+		.main{position:relative;height:100%;background:url(../image/bj.jpg) no-repeat center bottom;}
+		.yifu{position:absolute;top:0;left:0;}
+		.main .yifu{width: 85px; height: 85px; float: right; margin: 85px 45px 266px 0; position: relative;overflow: hidden;}
+		.main .yf_bj{ position: absolute; bottom: 0; left: 0; width: 70px; height: 70px; background: #fff; opacity: .8; filter:alpha(opacity=80); border-radius: 10px;}
+		.main .yifu a{ display: block; position: absolute; bottom: 0; left: 0; width: 70px; height: 70px;}
+		.main .yifu a img{ display: block; margin: 12px auto;}
+		.main .yifu a span{ position: absolute; top: -15px; right: -15px; width: 30px; height: 30px; border-radius: 50%; background: #f08e02; font-size: 25px; text-align: center; line-height: 30px; color: #fff;}
+		.pic_div{ position: absolute; bottom:540px; left:267px;width: 186px;  margin-left:-186px; overflow: hidden; margin: 0 auto; text-align: center;}
+		.pic{ width: 84px; height: 84px; border-radius: 5px; display: block; margin: 0 auto;}
+		.pic_div p{ color: #fff; font-size: 28px; width: 30px;line-height: 33px;margin: 0 auto;padding-top: 10px;}
+
+		.pic_div div{ float: left; width: 93px; overflow: hidden;display: inline;}
+		.pic_div div img.pic{ width: 60px; height: 60px;}
+
+
+		.slid_tab{ position: absolute; bottom:40px; left:30px; border-radius: 8px; background: #f08e02;height: 60px;width: 60px;}
+		
+		.slid_tab img{ display: block; float: left;}
+
+		.slid_div{  border-radius: 8px; background: #f08e02; overflow:hidden; height:60px; width: 660px;position: absolute;left: 0;top: 0;}
+		.slid_div img{ margin: 5px;}
+		.slid_div a{ display: block; float: left; color: #fff; font-size: 26px; line-height: 60px; text-align: center; width:100px;}
+		.sacrifice{position: absolute;}
+		.sacrifice img{width: 50px;}
+		</style>
+	</head>
+	<body>
+		<div class="wrap">
+			<div id="header"></div>
+			<div class="main">
+<!-- 				<div class="yifu">
+					<div class="yf_bj"></div>
+					<a><img src="../image/icon1.png" /><span>3</span></a>
+				</div> -->
+				<div class="pic_div" id="lingmu">
+<!-- 					<div><img src="../image/pic1.jpg" class="pic"/><p>张建国之墓</p></div>
+					<div><img src="../image/pic1.jpg" class="pic"/><p>张建国之墓</p></div> -->
+				</div>
+				<div class="slid_tab">
+					<img src="../image/icon2.png" class="up"/>
+					<div class="slid_div">
+						<img src="../image/icon3.png" class="right"/>
+						<a onclick="openWin(3);">鲜花</a><a onclick="openWin(6);">香烛</a><a onclick="openWin(52);">金钱</a><a onclick="openWin(120);">守护</a><a onclick="openWin(82);">祭拜</a><a onclick="openWin(53);">其它</a>
+					</div>
+				</div>	
+<!-- 				<div style="position:absolute;top:10px;left:10px;">	
+					<object  sacrificeobject="sacrificeobject"   width="50"   classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0">
+						<param name="movie" value="http://www.ganhuai.net/UploadFiles/Image/Heaven/Sacrifice/SacrificeFilePath/100317165419041.swf" />
+						<param name="quality" value="high" />
+						<param name="wmode" value="transparent">
+						<embed src="http://www.ganhuai.net/UploadFiles/Image/Heaven/Sacrifice/SacrificeFilePath/100317165419041.swf" menu="false" wmode="transparent" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer"    type="application/x-shockwave-flash"></embed>
+					</object>
+				</div>-->	
+<!-- 				<div style="position:absolute;bottom:100px;left:60px;">	
+					<img src="http://www.ganhuai.net/UploadFiles/Image/Heaven/Sacrifice/SacrificeFilePath/100416144856476.png" width="80" />
+				</div>  -->
+
+			</div>
+		</div>
+		<script type="text/javascript" src="../script/api.js" ></script>
+		<script type="text/javascript" src="../script/wap.js" ></script>
+		<script type="text/javascript" src="../script/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript">
+			apiready=function(){
+		  		// var header = $api.byId('header');
+		  		// $api.fixIos7Bar(header);
+		  		// $api.fixStatusBar(header);
+		  		// api.setStatusBarStyle({
+	     //        	style:'dark',
+	     //        	color:'#6ab494'
+	     //        });
+
+				api.setRefreshHeaderInfo({
+					visible:true,
+					bgColor:'#ccc',
+					textColor:'#fff',
+					textDown:'下拉刷新',
+					textUp:'松开刷新',
+					showTime:true
+			    },function(ret,err){
+		            getInfo();
+		            getSacrifice();
+					api.refreshHeaderLoadDone();	//恢复正常状态 	
+			    });	            
+
+	            getInfo();
+	            getSacrifice();
+
+			    api.setFrameGroupAttr({
+			        name: 'jngroup',
+			        hidden: true
+			    });	  
+
+			};
+			function openWin(classID){
+				api.openWin({
+	                name: 'shop',
+	                url: 'win_shop.html',
+	                pageParam:{
+	                	classID:classID,
+	                	id:api.pageParam.id
+	                }
+                });
+			}
+			$(function(){
+				$('.up').click(function(){
+
+					$(this).hide()&&$('.slid_div').animate({'width':'660px'})
+				})
+				$('.right').click(function(){
+					$('.slid_div').animate({'width':'0'})&&$('.up').show();
+				})
+			});
+ 		//获取陵墓信息
+ 		function getInfo(){
+ 			api.showProgress();
+ 			api.ajax({
+	             url:'http://www.ganhuai.net/json/home.aspx?number='+api.pageParam.id,
+	             method:'get',
+	             timeout:30,
+	             cache:true,
+	             dataType:'json'
+             },function(ret,err){
+             	api.hideProgress();
+             	var lingmu="";
+             	if(ret){
+             		if(ret.peopleCount==1){
+             			lingmu+='<img src="'+ret.img1+'" class="pic"/><p>'+ret.name1+'之墓</p>';
+             		}else{
+             			lingmu+='<div><img src="'+ret.img1+'" class="pic"/><p>'+ret.name1+'之墓</p></div>';
+             			lingmu+='<div><img src="'+ret.img2+'" class="pic"/><p>'+ret.name2+'之墓</p></div>';
+             		}
+
+             		$("#lingmu").html(lingmu);
+             		
+
+             	}else{
+             		api.alert({
+                     	msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+                     });
+             	}
+             });
+ 		} 
+ 		//获取敬献祭品
+ 		function getSacrifice(){
+ 			api.showProgress();
+ 			api.ajax({
+	             url:'http://www.ganhuai.net/json/sacrifice.aspx?number='+api.pageParam.id,
+	             method:'get',
+	             timeout:30,
+	             cache:true,
+	             dataType:'json'
+             },function(ret,err){
+             	api.hideProgress();
+             	var lingmu="";
+             	if(ret){
+             		$(".sacrifice").remove();
+             		var htmlStr="";
+             		var result=ret.result;
+             		for(var i=0;i<result.length;i++){
+             			var left=i%7*80+60;
+             			var bottom=parseInt(i/7)*80+100;
+             			if(bottom>api.winHeight) bottom=bottom-api.winHeight;
+             			htmlStr+='<div style="position:absolute;bottom:'+bottom+'px;left:'+left+'px;">';
+             			var filepath=result[i].Information;
+             			if (filepath.indexOf(".swf") >= 0) {
+					        // var sFlashHtml = '<object  sacrificeobject="sacrificeobject"   width="50"  classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0"' + '>' + '<param name="movie" value="' + filepath + '" />' + '<param name="quality" value="high" />' + '<param name="wmode" value="transparent">' + '<embed src="' + filepath + '" menu="false" wmode="transparent" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" ' + '   type="application/x-shockwave-flash"></embed>' + '</object>';
+					        //htmlStr+= sFlashHtml;
+					    } else {
+					        htmlStr+='<img src="'+filepath+'"  width="70" />';
+					    }
+					    htmlStr+="</div>";
+             		}
+             		$(".main").append(htmlStr);
+             	}else{
+             		api.alert({
+                     	msg:('服务器连接失败，请刷新')
+                     });
+             	}
+             });
+ 		} 		 			
+		</script>
+	</body>
+</html>

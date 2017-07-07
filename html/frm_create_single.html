@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/style1.css"/>
+        <script type="text/javascript" src="../script/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="../script/modal.js"></script>
+        <script type="text/javascript">
+		$(document).ready(function(){
+		
+			$("a.forgot").click(function(){
+				$("#login-modal").modal("hide");
+				$("#forgetform").modal({show:!0})
+			});
+			
+			$("#signup-modal").modal("hide");
+			$("#forgetform").modal("hide");
+			$("#login-modal").modal("hide");
+			$("#activation-modal").modal("hide");
+			$("#setpassword-modal").modal("hide");
+			$("#setpasswords-modal").modal("hide");
+			
+		});
+       </script>
+		<title></title>
+	</head>
+	<body>
+			
+            <div class="yanzhen" id="g-hd">
+            <div class="yanzhen_left" onclick="closeFrame();"></div>
+            <div class="yanzhen_mid"> <a href="#login-modal" data-toggle="modal" class="sf">创建单人馆<img src="../image/cj.png" align="absmiddle"></a></div>
+             <!--弹出层-->
+			<div class="modal" id="login-modal">
+			<div class="shuangrenguan"><a id="double" class="sh">创建双人馆</a></div>
+			</div>
+			<!--弹出层结束-->
+            </div>
+            
+            <div class="danren">
+            <div class="yanzhen_juti_left">纪念馆名称</div>
+            <div class="yanzhen_juti_right"><input name="title" id="title" type="text" class="srk txtCenter"></div>
+            </div>
+            <div class="danren">
+            <div class="yanzhen_juti_left">您想纪念谁</div>
+            <div class="yanzhen_juti_right"><input name="lastname" id="lastname" type="text" class="srk txtCenter"></div>
+            </div>
+            <div class="danren">
+            <div class="yanzhen_juti_left">性别</div>
+            <div class="yanzhen_juti_right txtCenter">
+            <input name="gender" type="radio" value="2" checked  onclick="$('#gender').val(this.value)" /> 男
+            <input name="gender" type="radio" value="1" onclick="$('#gender').val(this.value)" /> 女
+            <input id="gender" type="hidden" value="2" />
+            </div>
+            </div>
+
+           <p class="tiaokuan"><input name="" type="checkbox" value="1" checked>我已经阅读并同意<em class="green" onclick="openService();">《祭祀服务协议》</em></p> 
+            <a id="create" class="xiayibu2">完成创建</a>         
+ 
+	<script type="text/javascript" src="../script/api.js"></script>   
+	<script>
+	apiready=function(){
+	    var header = $api.byId('g-hd');
+	    $api.fixIos7Bar(header);
+	    $api.fixStatusBar(header);
+	    api.setStatusBarStyle({
+	          style:'dark',
+	          color:'#6ab494'
+	     });
+
+	};
+	
+	//选择性别
+	function selectGender(){
+		var UICustomPicker = api.require('UICustomPicker');
+		UICustomPicker.open({
+		    rect: {
+		        x: 0,
+		        y: 0,
+		        w: api.winWidth,
+		        h: api.winHeight
+		    },
+		    styles: {
+		        bg: 'rgba(0,0,0,0.5)',
+		        normalColor: '#959595',
+		        selectedColor: '#3685dd',
+		        selectedSize: 36,
+		        tagColor: '#3685dd',
+		        tagSize: 10
+		    },
+		    data: [{
+		    	scope:[{value:'男',text:'Male'},{value:'女',text:'Female'}]		    
+		    }],
+
+		    rows: 3,
+		    fixedOn: api.frameName,
+		    fixed: true
+		}, function( ret, err ){
+		    if( ret ){
+		         alert( JSON.stringify( ret ) );
+		         $('#genderText').html(ret.data[0].value);
+		         $('#gender').val(ret.data[0].text);
+				var UICustomPicker = api.require('UICustomPicker');
+				UICustomPicker.close({
+				    id: ret.id
+				});
+		    }else{
+		         alert( JSON.stringify( err ) );
+		    }
+		});	  	
+	}
+
+	//切换双人馆
+	$("#double").click(function(){
+
+        api.openFrame({
+	        name: 'create_double',
+	        url: 'frm_create_double.html',
+	        pageParam:api.pageParam,
+	        rect: {
+		        x:0,
+		        y:0,
+		        w:'auto',
+		        h:api.winHeight-60
+	        }
+        });
+		api.closeFrame({
+	        name: 'create_single'
+        });        
+	});
+	
+	//创建纪念馆
+	$("#create").click(function () {
+	  var title=$("#title");
+	  var lastname=$("#lastname");
+	  var gender=$('#gender');
+	  if(title.val()==""){
+	      title.focus();
+	      api.toast({
+	              msg : '请输入纪念馆名称'
+	      });
+	      return;    
+	  }
+
+	  if(lastname.val()==""){
+	      lastname.focus();
+	      api.toast({
+	              msg : '请输入被纪念人的姓名'
+	      });
+	      return;    
+	  }  
+	  
+	  api.ajax({
+		  url:'http://www.ganhuai.net/json/createHall.aspx',
+		  method:'post',
+		  dataType:'json',
+		  returnAll:false,
+		  data:{
+		  	values:{
+		  		title:title.val(),
+		  		lastname:lastname.val(),
+		  		gender:gender.val(),
+		  		lastname1:"",
+		  		gender1:0,
+		  		username:api.pageParam.username,
+		  		pc:1
+		  	}
+		  }
+	  },function(ret,err){
+	    if(ret){
+	      if(ret.flag==0){
+	             api.toast({
+		             msg:'纪念馆创建失败！'
+	             });          
+	      }else if(ret.flag==3){
+	      	api.toast({
+	              msg:'纪念馆创建超时！'
+              });
+	      }else if(ret.flag==1){
+	             api.toast({
+		             msg:'纪念馆创建成功！'
+	             });       
+	
+	        closeFrame();      //关闭frame
+
+	      }      
+	    }else{
+	      api.alert({
+	        msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+	      });
+	    }
+	
+	  });
+	});
+	
+	function closeFrame(){		
+		api.setFrameGroupIndex({
+		    name: 'group',
+		    index: 0,
+		    reload:true
+		});
+		api.closeFrame();
+	}
+	
+	function openService(){
+	  api.openWin({
+		  name: 'service',
+		  url: 'win_service.html'
+	  });
+	}
+	</script>
+	</body>
+</html>

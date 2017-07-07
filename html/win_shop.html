@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/style1.css"/>
+	<title></title>
+	<style>
+		html,body{height:100%;}
+		#g-doc{
+			display:-webkit-box;
+			display:-webkit-flex;
+			display:flex;
+			-webkit-box-orient:vertical;
+			-webkit-flex-flow:column;
+			flex-flow:column;
+			height:100%;
+		}
+
+		#g-mn{
+			-webkit-box-flex:1;
+			-webkit-flex:1;
+			flex:1;
+			overflow:auto;
+		}
+	</style>
+</head>
+<body>
+	<div id="g-doc">
+		<div class="yanzhen" id="g-hd">
+			<div class="yanzhen_left" onclick="closeWin();"></div>
+			<div class="yanzhen_mid" id="selectClass"> <a href="#login-modal11" data-toggle="modal" class="sf"><span id="className">鲜花</span><img src="../image/cj.png" align="absmiddle"></a></div>
+			<!--弹出层-->
+<!--			<div class="modal" id="login-modal">
+				<div class="shuangrenguan1"><a href="#" class="sh">供奉品</a></div>
+			</div>-->
+			<!--弹出层结束-->	
+			<div class="yanzhen_right2"></div>
+		</div>			
+		<div id="g-mn">
+		
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../script/zepto.min.js"></script>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+	
+      apiready=function(){
+            var header = $api.byId('g-hd');
+            $api.fixIos7Bar(header);
+            $api.fixStatusBar(header);
+            api.setStatusBarStyle({
+                  style:'dark',
+                  color:'#6ab494'
+             });
+         openFrame(api.pageParam.classID);
+
+      }; 	
+    function openFrame(classID){
+    	var className="";
+         	 switch(classID){
+		    		case 3:
+		    			className="鲜花";
+		    			break;
+		    		case 6:
+		    			className="香烛";
+		    			break;		
+		    		case 52:
+		    			className="金钱";
+		    			break;
+		    		case 120:
+		    			className="守护";
+		    			break;	
+		    		case 82:
+		    			className="祭拜";
+		    			break;
+		    		case 53:
+		    			className="其它";
+		    			break;			    					    			    		
+		    	}    
+		$("#className").html(className);
+		api.openFrame({
+	        name: 'shoplist',
+	        url: 'frm_shop.html',
+	        rect: {
+		        x:0,
+		        y:$("#g-hd").height(),
+		        w:'auto',
+		        h:api.winHeight-$("#g-hd").height()
+	        },
+	        pageParam:{
+	        	classID:classID,
+	        	id:api.pageParam.id
+	        },
+	        reload:true
+        });    
+    }
+	function closeWin(){
+		api.closeWin();
+	}
+	function openCart(){
+		api.openWin({
+	        name: 'cart',
+	        url: 'win_cart.html'
+        });
+	}
+	$(document).ready(function(){
+	
+	$("#selectClass").click(function(){
+		var obj = api.require('MNActionButton');
+		obj.open({
+		    layout: {
+		        row: 2,                        //（可选项）数字类型；每屏显示菜单按钮的行数；默认：2
+		        col: 3,                        //（可选项）数字类型；每屏显示菜单按钮的列数；默认：3
+		        rowSpacing: 5,                 //（可选项）数字类型；行与行之间的距离；默认：10
+		        colSpacing: 10,                //（可选项）数字类型；列与列之间的距离；默认：10
+		        offset: 0                      //（可选项）数字类型；整个菜单底部距离所属 window 底部的距离，只能为正整数；默认：0
+		    },
+		    animation: true,                   //（可选项）布尔类型；弹出和隐藏菜单时是否带弹出动画效果，true|false；默认：true
+		    autoHide: true,                    //（可选项）布尔类型；点击菜单按钮后是否自动隐藏菜单，true|false；默认：true
+		    styles: {
+		        maskBg: 'rgba(0,0,0,0.2)',     //（可选项）字符串类型；遮罩层背景，支持 rgb，rgba，#，img；默认：rgba(0,0,0,0.2)
+		        bg: '#fff',                    //（可选项）字符串类型；菜单有效区域背景，支持 rgb，rgba，#，img；默认：#fff
+		        cancelButton: {                      //（可选项）JSON 对象类型，取消按钮设置
+		            size: 44,                  //（可选项）数字类型；底部取消按钮的高和宽；默认：44
+		            bg: '#fff',                //（可选项）字符串类型；取消按钮的 100% 宽度的背景，支持rgb，rgba，#，img；默认：'#fff'
+		            icon: 'widget://res/action-button-cancel.png'  //（可选项）字符串类型：取消按钮的图标，要求本地路径（widget://、fs://）；默认：默认X型图标
+		        },
+		        item: { //（可选项）JSON 对象类型，菜单按钮设置
+		            titleColor: '#888',        //（可选项）字符串类型；菜单按钮文字颜色，支持 rgb，rgba，#；默认：#848484
+		            titleHighlight: 'dd2727',  //（可选项）字符串类型；菜单按钮文字高亮颜色，支持 rgb，rgba，#；默认：同 titleColor
+		            titleSize: 12              //（可选项）数字类型；菜单按钮文字大小，同时也是文字栏所占高度，值为 0 时不显示文字栏；默认：12
+		        },
+		        indicator: {                   //（可选项）JSON 对象类型；页标指示器样式，若不传则不显示该指示器
+		            color: '#c4c4c4',          //（可选项）字符串类型；其它页指示器颜色；支持rgb、rgba、#；默认：'#c4c4c4'
+		            highlight: '#9e9e9e'       //（可选项）字符串类型；当前页指示器颜色；支持rgb、rgba、#；默认：'#9e9e9e'
+		        }
+		    },
+		    items:[{ //JSON 对象类型；一个菜单项的设置信息
+		        icon: 'widget://res/btn11.jpg', //字符串类型；一个菜单按钮的图标路径，要求本地路径（widget://、fs://）；
+		    	highlight: '', //（可选项）字符串类型；一个菜单按钮的高亮图标路径，要求本地路径（widget://、fs://）；默认：同 icon
+		        title: '鲜花',               //字符串类型；菜单按钮的文字；默认：未设置时不显示，但文字栏仍按 titleSize 设置显示高度
+		    }, {
+		        icon: 'widget://res/btn22.jpg',
+		        highlight: '',
+		        title: '香烛'
+		    }, {
+		        icon: 'widget://res/btn33.jpg',
+		        highlight: '',
+		        title: '金钱'
+		    }, {
+		        icon: 'widget://res/btn44.jpg',
+		        highlight: '',
+		        title: '守护'
+		    }, {
+		        icon: 'widget://res/btn55.jpg',
+		        highlight: '',
+		        title: '祭拜'
+		    }, {
+		        icon: 'widget://res/btn66.jpg',
+		        highlight: '',
+		        title: '其它'
+		    }]
+		}, function(ret, err) {
+		    if (ret) {
+		    	switch(ret.index){
+		    		case 0:
+		    			openFrame(3);
+		    			break;
+		    		case 1:
+		    			openFrame(6);
+		    			break;		
+		    		case 2:
+		    			openFrame(52);
+		    			break;
+		    		case 3:
+		    			openFrame(120);
+		    			break;	
+		    		case 4:
+		    			openFrame(82);
+		    			break;
+		    		case 5:
+		    			openFrame(53);
+		    			break;			    					    			    		
+		    	}
+		    } else {
+		        alert(JSON.stringify(err));
+		    }
+		});
+	});
+
+	});
+	
+
+	</script>
+</body>
+</html>

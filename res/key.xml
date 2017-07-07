@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<security>
+  <item name="wxPay_appId" value="wx8980247777a4e671"/>
+  <item name="wxPay_mchId" value="1323139601"/>
+  <item name="wxPay_partnerKey" value="k7w5spuxdws8hrn2lbwymyfrwcr3c58p"/>
+  <item name="wxPay_notifyUrl" value="http://www.ganhuai.net/json/notify.asp"/>
+  <item name="其它服务需加密的参数配置 " value="***"/>
+</security>

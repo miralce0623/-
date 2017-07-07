@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<title></title>
+	</head>
+	<body>
+			
+            <div class="yanzhen" id="g-hd">
+            <div class="yanzhen_left"></div>
+            <div class="yanzhen_mid">输入验证码</div>
+            </div>
+            <div class="shouji">
+           
+            请输入手机13324560126收到的短信验证码
+            <div class="yanzhen_juti">
+            <div class="yanzhen_juti_left">验证码</div>
+            <div class="yanzhen_juti_right"><input name="" type="text" class="srk"></div>
+            </div>
+            <a href="#" class="xiayibu">下一步</a>
+            <div class="weishoudao">若未收到验证码或验证码已过期</div>
+            <a href="#" class="xiayibu1">重新获取验证码</a>
+            </div>
+      <script type="text/javascript" src="../script/api.js"></script>   
+      <script>
+      apiready=function(){
+            var header = $api.byId('g-hd');
+            $api.fixIos7Bar(header);
+            $api.fixStatusBar(header);
+            api.setStatusBarStyle({
+                  style:'dark',
+                  color:'#6ab494'
+             });
+          
+      };                      
+			
+	</body>
+</html>

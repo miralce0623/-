@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<title></title>
+	</head>
+	<body>
+			
+  <div class="yanzhen" id="g-hd">
+    <div class="yanzhen_left" onclick="closeWin();"></div>
+    <div class="yanzhen_mid">注册</div>
+  </div>
+  <div class="zhuce">
+  
+  <div class="zhuce_juti">
+    <div class="zhuce_juti_left">账号</div>
+    <div class="zhuce_juti_mid"><input name="username" id="username" type="text" class="srk"></div>
+  </div>
+  <div class="zhuce_juti">
+    <div class="zhuce_juti_left">密码</div>
+    <div class="zhuce_juti_mid"><input name="password" id="password" type="password" class="srk"></div>
+  </div>
+  </div>
+  <p class="tiaokuan"><input id="chkdiaokuan" type="checkbox" checked value="1">我已经阅读并同意<em class="green" onclick="openException();">《感怀免责条款》</em></p>
+   <a id="reg" class="xiayibu2">注册</a>
+
+<!--  <div class="qita">
+  <div class="qita_juti">选择其他方式注册</div>
+  </div>
+   <ul class="xinlang">
+  <li><img src="../image/pic1.png"></li>
+  <li><img src="../image/pic2.png"></li>
+  <li><img src="../image/pic3.png"></li>
+  </ul> -->
+            
+<script type="text/javascript" src="../script/api.js"></script>   
+<script type="text/javascript" src="../script/zepto.min.js"></script>  
+<script>
+apiready=function(){
+      var header = $api.byId('g-hd');
+      $api.fixIos7Bar(header);
+      $api.fixStatusBar(header);
+      api.setStatusBarStyle({
+            style:'dark',
+            color:'#6ab494'
+       });
+};
+
+$("#reg").click(function () {
+  api.showProgress();
+  var username=$("#username");
+  var password=$("#password");
+  if(username.val()==""){
+      username.focus();
+      api.toast({
+              msg : '用户名不能为空'
+      });
+      return;    
+  }
+  if (!/^[a-zA-Z0-9_]{6,20}$/.test(username.val()))
+  {
+      username.focus();
+      api.toast({
+              msg : '账号必须由大小写英文字母、数字和下划线组成，不能有中文，长度6-20位。'
+      });      
+      eInput.focus();
+      return;
+  }
+  if(password.val()==""){
+      password.focus();
+      api.toast({
+              msg : '密码不能为空'
+      });
+      return;    
+  }  
+  
+  api.ajax({
+	  url:'http://www.ganhuai.net/json/reg.aspx',
+	  method:'post',
+	  dataType:'json',
+	  returnAll:false,
+	  data:{
+	  	values:{
+	  		username:$('#username').val(),
+	  		password:$('#password').val()
+	  	}
+	  }
+  },function(ret,err){
+    api.hideProgress();
+    if(ret){
+      if(ret.flag==0){
+             api.toast({
+	             msg:'用户名已存在！'
+             });          
+      }else{
+             api.toast({
+	             msg:'用户注册成功！'
+             });       
+
+         // 将注册信息保存到setPrefs中
+        api.setPrefs({
+            key : 'userinfo',
+            value : $('#username').val()         
+        });
+        // 广播事件
+        api.sendEvent({
+                name : 'reg_login_successEvent',
+                extra : $('#username').val()
+        });
+        // 回到首页
+        api.closeToWin({
+            name : 'root'
+        });        
+      }      
+    }else{
+      api.alert({
+        msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+      });
+    }
+
+  });
+});
+
+function closeWin(){
+  api.closeWin();
+}
+
+function openException(){
+  api.openWin({
+	  name: 'exception',
+	  url: 'win_exception.html'
+  });
+}
+</script>
+	</body>
+</html>

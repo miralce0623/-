@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<title></title>
+	</head>
+	<body>
+	<div id="header"></div>
+	<div class="main" style="background-color:#ccc;"></div>
+	<!--底部-->
+	<div id="stickey_bottom1">
+	<ul class="bottom">
+	<li onclick="openFrame(this,'home_1')" data-index='0'><a class="hover">主页</a></li>
+	<li onclick="openFrame(this,'home_lingmu')" data-index='1'><a  class="s1">陵墓</a></li>
+	<li onclick="openFrame(this,'home_jinian')" data-index='2'><a  class="s2">纪念</a></li>
+	<li onclick="openFrame(this,'home_profile')" data-index='3'><a  class="s3">资料</a></li>
+	<li onclick="openFrame(this,'home_more')" data-index='4'><a  class="s4">更多</a></li>
+	</ul>
+	</div>
+	<script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.min.js"></script>
+    <script>
+   	apiready=function(){ 
+   		//openFrameGroup();
+   		var obj=$('bottom').find('li').eq(0);
+   		openFrame(obj,'home_1');
+ 		
+    };
+    
+    //打开framegroup
+//	function openFrameGroup(){
+//      api.openFrameGroup({
+//          name: 'group_home',
+//          rect:{
+//	            x:0,
+//	            y:0,
+//	            w:'auto',
+//	            h:api.winHeight-$('.bottom').height()
+//          },
+//          frames:[{
+//          	name:'home',
+//          	url:'frm_home_1.html',
+//          	pageParam:api.pageParam
+//          },{
+//          	name:'lingmu',
+//          	url:'frm_home_lingmu.html',
+//          	pageParam:api.pageParam	            	
+//          },{
+//          	name:'home_jinian',
+//          	url:'frm_home_jinian.html',
+//          	scrollToTop:true,
+//          	pageParam:api.pageParam
+//          },{
+//          	name:'profile',
+//          	url:'frm_home_profile.html',
+//          	scrollToTop:true,
+//          	pageParam:api.pageParam
+//          },{
+//          	name:'more',
+//          	url:'frm_home_more.html',
+//          	scrollToTop:true,
+//          	pageParam:api.pageParam
+//          }],
+//          scrollEnabled:false,
+//          index:0
+//          
+//      },function(ret,err){
+//      	
+//      });    	
+//	}
+	function hideAllFrame() {
+	    api.setFrameAttr({
+	        name: 'profile_detail',
+	        hidden: true
+	    });
+	    api.setFrameAttr({
+	        name: 'profile_edit',
+	        hidden: true
+	    });	 
+	    api.closeFrame({
+	        name: 'home_1'
+        });  	       
+	    api.closeFrame({
+	        name: 'home_lingmu'
+        });          
+	    // api.setFrameGroupAttr({
+	    //     name: 'framegroup01',
+	    //     hidden: true
+	    // });
+	    // api.setFrameGroupAttr({
+	    //     name: 'framegroup02',
+	    //     hidden: true
+	    // });
+	    api.setFrameGroupAttr({
+	        name: 'jngroup',
+	        hidden: true
+	    });	    
+
+	}    	
+	//切换页面
+//	function openFrame(obj){
+//		try{
+//
+//			$(obj).parent().find('.hover').removeClass('hover');
+//			api.setFrameGroupIndex({
+//              name: 'group_home',
+//              index:$(obj).data('index')
+//          });
+//			hideAllFrame();	//隐藏所有frame
+//			if($(obj).data('index')==2){
+//			    api.setFrameGroupAttr({
+//			        name: 'jngroup',
+//			        hidden: false
+//			    });	    
+//
+//			}	
+//		}catch(e){
+//			alert(e);
+//		}
+//	}
+
+	function openFrame(obj,pageName){
+		try{
+			$(obj).parent().find('.hover').removeClass('hover');
+			api.openFrame({
+	            name:pageName,
+	            url:'frm_'+pageName+'.html',
+	            pageParam:api.pageParam,
+	            rect: {
+		            x:0,
+		            y:0,
+		            w:'auto',
+		            h:api.winHeight-$('.bottom').height()
+	            }
+	            
+            });
+	
+		}catch(e){
+			alert(e);
+		}
+	}
+   		
+    </script>      
+ 	
+	</body>
+</html>

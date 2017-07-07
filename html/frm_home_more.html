@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/style2.css"/>
+        <script type="text/javascript" src="../script/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="../script/modal.js"></script>
+		<title></title>
+		<style>
+		html,body{height: 100%;}
+		#g-doc{
+			display:-webkit-box;
+			display:-webkit-flex;
+			display:flex;
+			-webkit-box-orient:vertical;
+			-webkit-flex-flow:column;
+			flex-flow:column;
+			height:100%;
+		}
+		#g-hd{
+			width:100%;
+			height:60px;
+			line-height:60px;
+			background-color:#229d63;
+			text-align:center;
+			color:#fff;
+		}		
+		#g-mn{
+			-webkit-box-flex:1;
+			-webkit-flex:1;
+			flex:1;
+			overflow:auto;
+		}
+		</style>
+	</head>
+	<body>
+		<div id="g-doc">
+			<div id="g-hd">更多</div>
+            <div id="g-mn">
+	           <!--  <div class="gengduo">给本馆赠送铜板</div>
+	            <input name="" type="text" class="gengduo_srk">
+	            <div class="gengduo huise">公共账户余额500个铜板</div>
+	            <a href="#" class="xiayibu2">赠送</a> -->
+<!--	            <div class="youqingguan">
+	            <div class="youqingguan_left"><img src="../image/pic5.png" align="absmiddle">友情纪念馆</div>
+	            <div class="youqingguan_right"></div>
+	            </div>
+	             <div class="youqingguan">
+	            <div class="youqingguan_left"><img src="../image/pic6.png" align="absmiddle">亲友列表</div>
+	            <div class="youqingguan_right"></div>
+	            </div>
+ 	             <div class="youqingguan">
+	            <div class="youqingguan_left"><img src="../image/pic7.png" align="absmiddle">陵园物品摆放管理</div>
+	            <div class="youqingguan_right"></div>
+	            </div> -->
+	             <div class="youqingguan" id="editHallTitle">
+	            <div class="youqingguan_left"><img src="../image/pic8.png" align="absmiddle">修改纪念馆名称</div>
+	            <div class="youqingguan_right"></div>
+	            </div>
+	            <div class="youqingguan" id="editPassword">
+	            <div class="youqingguan_left"><img src="../image/pic9.png" align="absmiddle">修改进馆密码</div>
+	            <div class="youqingguan_right"></div>
+	            </div>
+<!-- 	             <div class="youqingguan">
+	            <div class="youqingguan_left"><img src="../image/pic10.png" align="absmiddle">重置碑文</div>
+	            <div class="youqingguan_right"></div>
+	            </div> -->
+	            <div class="youqingguan" id="upgrade">
+	            <div class="youqingguan_left"><img src="../image/pic11.png" align="absmiddle">升级高级馆</div>
+	            <div class="youqingguan_right"></div>
+	            </div>            	
+            </div>
+
+		</div>	 
+		<!--弹出层-->
+		<div class="modal" id="hallTitle-modal">
+			<div class="shuangrenguan">修改纪念馆名称<p>当前名称：<span id="title-old"></span></p><input id="title" name="title" type="text" class="srk5"></div>
+			<div class="anniu">
+				<div class="anniu_left green" id="btn-ok-1">确定</div>
+				<div class="anniu_left huise" id="btn-cancel-1">取消</div>
+			</div>				
+		</div>
+		<div class="modal" id="editPassword-modal">
+			<div class="shuangrenguan">修改纪念馆密码<input name="password" id="password" type="password" class="srk5"></div>
+			<div class="anniu">
+				<div class="anniu_left green" id="btn-ok-2">确定</div>
+				<div class="anniu_left huise" id="btn-cancel-2">取消</div>
+			</div>
+		</div>				
+		<!--弹出层结束-->
+	<script type="text/javascript" src="../script/api.js"></script>   
+	<script>
+	apiready=function(){
+	    var header = $api.byId('g-hd');
+	    $api.fixIos7Bar(header);
+	    $api.fixStatusBar(header);
+	    api.setStatusBarStyle({
+	          style:'dark',
+	          color:'#6ab494'
+	     });
+
+	    api.getPrefs({
+	        key:'userinfo'
+        },function(ret,err){
+        	var val=ret.value;
+        	if(ret && val != ""){
+        		$api.setStorage("username", val);
+        	}else{
+        		$api.setStorage("username", "");
+        	}
+        });
+
+	  	$("#title-old").html(api.pageParam.title);
+	};
+
+	$(function(){
+		var username=$api.getStorage("username");
+		$("#hallTitle-modal").modal("hide");
+		$("#editPassword-modal").modal("hide");
+
+		$("#editHallTitle").click(function(){
+			if(username==api.pageParam.creator){
+				$("#hallTitle-modal").modal({show:!0});
+			}else{
+				alert("您没有权限修改该纪念馆名称！");
+			}
+
+		});	
+		$("#btn-cancel-1").click(function(){
+			$("#hallTitle-modal").modal("hide");
+		});	
+		$("#editPassword").click(function(){
+			if(username==api.pageParam.creator){
+				$("#editPassword-modal").modal({show:!0});
+			}else{
+				alert("您没有权限修改该纪念馆进馆密码！");
+			}			
+		});	
+		$("#btn-cancel-2").click(function(){
+			$("#editPassword-modal").modal("hide");
+		});	
+
+		$("#upgrade").click(function(){
+			if(username==api.pageParam.creator){
+				openUpgrade();
+			}else{
+				alert("您没有权限！");
+			}	
+
+		});
+	});
+
+	function openUpgrade(){
+		api.openWin({
+	        name: 'upgrade',
+	        url: 'win_upgrade.html',
+	        pageParam:api.pageParam
+        });
+	}	
+
+	//修改纪念馆名称
+	$("#btn-ok-1").click(function () {
+	  var title=$("#title");
+	  if(title.val()==""){
+	      title.focus();
+	      api.toast({
+	              msg : '请输入新的纪念馆名称'
+	      });
+	      return;    
+	  }
+
+	  api.ajax({
+		  url:'http://www.ganhuai.net/json/editHallTitle.aspx?number='+api.pageParam.id,
+		  method:'post',
+		  dataType:'json',
+		  returnAll:false,
+		  data:{
+		  	values:{
+		  		title:title.val()
+		  	}
+		  }
+	  },function(ret,err){
+	    if(ret){
+	      //alert(JSON.stringify(ret));
+	      if(ret.flag==1){
+	             api.toast({
+		             msg:'纪念馆名称修改成功！'
+	             });     
+	             $("#hallTitle-modal").modal("hide");  
+	      } 
+     
+	    }else{
+	      api.alert({
+	        msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+	      });
+	    }
+	
+	  });
+	});	
+	//修改纪念馆密码
+	$("#btn-ok-2").click(function () {
+	  var password=$("#password");
+	  if(password.val()==""){
+	      password.focus();
+	      api.toast({
+	              msg : '请输入新的纪念馆名称'
+	      });
+	      return;    
+	  }
+
+	  api.ajax({
+		  url:'http://www.ganhuai.net/json/editHallPassword.aspx?number='+api.pageParam.id,
+		  method:'post',
+		  dataType:'json',
+		  returnAll:false,
+		  data:{
+		  	values:{
+		  		password:password.val()
+		  	}
+		  }
+	  },function(ret,err){
+	    if(ret){
+	      //alert(JSON.stringify(ret));
+	      if(ret.flag==1){
+	             api.toast({
+		             msg:'进馆密码修改成功！'
+	             });       
+	             $("#editPassword-modal").modal("hide");
+	      } 
+     
+	    }else{
+	      api.alert({
+	        msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+	      });
+	    }
+	
+	  });
+	});		
+	</script>           
+	</body>
+</html>

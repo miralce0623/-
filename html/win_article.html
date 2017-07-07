@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+	<title></title>
+	<style>
+	html,body{height:100%;}
+	#g-doc{
+		display:-webkit-box;
+		display: -webkit-flex;
+		display:flex;
+		
+		-webkit-box-orient:vertical;
+		-webkit-flex-flow:column;
+		flex-flow:column;
+	}
+	#g-mn{
+		-webkit-box-flex:1;
+		-webkit-flex:1;
+		flex:1;
+		padding:10px;
+		overflow: auto;
+	}
+	#g-hd{
+		display: -webkit-box;
+		display: -webkit-flex;
+		display:flex;
+		
+		width:100%;
+		height: 60px;
+		background:#229d63; 
+	}
+	#g-hd .left{
+		width:60px;
+		background:url(../image/back1.png) no-repeat center center;
+		background-size:24px 24px;
+	}
+
+	#g-hd .mid{
+		-webkit-box-flex:1;
+		-webkit-flex:1;	
+		flex:1;
+		line-height: 60px;
+		color: #fff;
+		font-size:18px;
+		text-align: center;
+	}
+	#g-hd .right{
+		width:60px;
+	}		
+	
+	#g-mn #title{font-size:20px;text-align: center;line-height: 40px;}
+	#g-mn .from{padding:10px 0;text-align: center;font-size:12px;}
+	#g-mn .from #addDateTime{margin-left:15px;}
+
+	#g-mn .cnt{margin:15px auto;line-height:1.2em;}
+	#g-mn .cnt p{margin-bottom:15px;}
+
+	.green{ color:#4c9d76;}	
+	</style>
+</head>
+<body>
+		
+<div id="g-doc">
+	<div id="g-hd">
+		<div class="left" onclick="closeWin();"></div>
+		<div class="mid">祭文详情</div>
+		<div class="right"></div>
+	</div>
+
+	<div id="g-mn">
+		<h3 id="title"></h3>
+		<div class="from"><span id="from" class="green"></span><span id="addDateTime"></span></div>
+		<div class="cnt" id="content">
+			
+		</div>
+	</div>
+</div>
+
+            
+
+<script src="../script/zepto.min.js"></script>
+<script src="../script/api.js"></script>
+<script>
+apiready=function(){
+	var header=$api.byId('g-hd');
+	$api.fixIos7Bar(header);    	
+	$api.fixStatusBar(header);
+	api.setStatusBarStyle({
+		style: 'dark',
+		color: '#6ab494'
+	});
+	
+	
+	getInfo();
+ 
+};
+
+
+function getInfo(){
+	api.showProgress();
+	api.ajax({
+		url:'http://www.ganhuai.net/json/articleView.aspx?number='+api.pageParam.id+'&ArticleID='+api.pageParam.articleID,
+		method:'get',
+		timeout:30,
+		cache:true,
+		dataType:'json'
+	},function(ret,err){
+		api.hideProgress();
+		if(ret){
+			$("#title").html(ret.title);
+			$("#from").html(ret.from);
+			$("#addDateTime").html(ret.addDateTime);
+			$("#content").html(ret.content);
+		}else{
+			api.alert({
+	     	msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+	     });
+		}
+	});
+}
+
+function closeWin(){
+	api.closeWin();
+}
+</script>         
+</body>
+</html>

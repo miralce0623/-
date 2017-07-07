@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" name="viewport">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="email=no" name="format-detection">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link href="../css/css1.css" rel="stylesheet" type="text/css" />
+    <script src="../script/tab1.js"></script>
+	<title></title>
+	<style>
+	html,body{height:100%;}
+	#g-doc{
+		display:-webkit-box;
+		display:-webkit-flex;
+		display:flex;
+		-webkit-box-orient:vertical;
+		-webkit-flex-flow:column;
+		flex-flow:column;
+		height:100%;
+	}
+	#g-hd{color:#fff;text-align:center;}
+	#g-mn{
+		-webkit-box-flex:1;
+		-webkit-flex:1;
+		flex:1;
+		overflow:auto;
+	}
+	</style>		
+</head>
+<body>
+	<div id="g-doc">
+		<div id="g-hd" class="yanzhen">
+			<div class="yanzhen_left"></div>
+			<div class="yanzhen_mid">我创建的纪念馆</div>
+			<div class="yanzhen_right" onclick="openCreate();">创建</div>
+		</div>
+		<div id="g-mn">
+			<!--tab切换-->
+			<div id=con>
+				<ul id="tags">
+					<li class="selectTag" onclick="selectTag(this,1);"><a>单人馆</a></li>
+					<li onclick="selectTag(this,2);"><a>双人馆</a></li>
+				</ul>
+				<div id="tagcontent">
+					<div class="tagcontent selectTag" id="tagcontent0">
+					</div>
+<!--					<div class="tagcontent" id="tagcontent1">
+			
+					</div>-->
+				</div>
+			</div>	
+		</div>
+	</div>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/api.js"></script>
+<script>
+var pageSize=6; // 页容量
+var totalData=0;  //定义一个变量存储第一次加载返回来的总记录数
+var totalPages=0;  // 定义一个变量存储第一次加载返回来的总页数
+var count=1;	//单人为1，双人为2
+var username="";
+$api.setStorage("crtPage1", 1); // 默认设置为第一页	
+
+apiready=function(){
+	var header=$api.byId('g-hd');
+	$api.fixIos7Bar(header);    	
+	$api.fixStatusBar(header);
+	api.setStatusBarStyle({
+		style: 'dark',
+		color: '#6ab494'
+	});
+	// 判断用户是否登录
+    api.getPrefs({
+            key : 'userinfo' // 用户信息key
+    }, function(ret, err) {
+            var val = ret.value;
+            if (val && val != "") {
+                username = typeof val == "string" ? val : JSON.stringify(val);
+                getList(count,username,1);
+            } else {
+                api.openWin({
+                    name: 'login',
+                    url: 'win_login.html'
+                });
+            }
+    });
+	api.addEventListener({
+	    name:'reg_login_successEvent'
+    },function(ret,err){
+    	if(ret && ret.value){
+    		username=ret.value;
+    		getList(count,username,1);
+    	}
+    });
+	api.setRefreshHeaderInfo({
+		visible:true,
+		bgColor:'#ccc',
+		textColor:'#fff',
+		textDown:'下拉刷新',
+		textUp:'松开刷新',
+		showTime:true
+    },function(ret,err){
+		getList(count,username,1);
+		api.refreshHeaderLoadDone();	//恢复正常状态 	
+    });
+    
+    api.refreshHeaderLoading();	
+	
+	// 结合上拉刷新：
+	api.addEventListener({
+	        name:'scrolltobottom',
+	        extra:{
+	                threshold:0 //设置距离底部多少距离时触发，默认值为0，数字类型
+	        }
+	},function(ret,err){
+	  var _page=parseInt($api.getStorage("crtPage1"));
+	  if(_page+1<=totalPages){
+	        getList(count,username,_page+1);
+	        $api.setStorage("crtPage1", _page+1); // 页码+1
+	  }
+	  else{
+	  	api.toast({
+	          msg:'没有更多数据了！'
+          });
+	  }
+	});	
+	
+};
+
+function selectTag(obj,cnt){
+    try{
+    	count=cnt;
+        $('#tags').find('.selectTag').removeClass('selectTag');
+        $(obj).addClass('selectTag');
+        $('#tagcontent0').html();
+        $api.setStorage("crtPage1", 1);
+        getList(count,username,1);
+    }catch(e){
+        alert(e);
+    }
+
+}
+
+//打开纪念馆
+function openSingle(obj){
+	api.openWin({
+	    name: 'home',
+	    url: 'win_home.html',
+	    pageParam:{
+	    	id:$(obj).data('index'),
+	    	title:$(obj).data('title'),
+	    	creator:$(obj).data('creator')
+	    }
+    });
+	
+}
+
+function openCreate(){
+	api.openFrame({
+        name: 'create_single',
+        url: 'frm_create_single.html',
+        pageParam:{
+        	username:username
+        },
+        rect: {
+	        x:0,
+	        y:0,
+	        w:'auto',
+	        h:api.winHeight-60
+        }
+    });
+}
+//获取纪念馆信息
+function getList(pc,username,page){
+
+api.showProgress();
+api.ajax({
+    url: 'http://www.ganhuai.net/json/halllist.aspx?pc='+pc+'&pagesize='+pageSize+'&page='+page+'&username='+username,
+    method: 'get',
+    timeout: 30,
+    dataType: 'json',
+    returnAll:false,
+    data:{
+    }
+},function(ret,err){
+	api.hideProgress();
+    if (ret) {
+     	totalData=ret.totalData;
+     	totalPages=Math.ceil(ret.totalData/pageSize);
+     	data=ret.data;
+     	var list="";
+    	if(page>1) list=$('#tagcontent0').html();
+    	for(var i=0;i<data.length;i++){
+    		 var imgPath="";
+    		 var clsName="";
+    		 if(i==0){
+    		 	clsName=" juli";
+    		 }
+    		 if (data[i].jinian2.name != '') {
+	    	 	list+='<div class="ziliao'+clsName+'" data-index="'+data[i].id+'" data-title="'+data[i].title+'" data-creator="'+data[i].creator+'" onclick="openSingle(this)"><div class="ziliao_left1"><img src="'+imgPath+data[i].jinian1.img+'" class="juli_right"><img src="'+imgPath+data[i].jinian2.img+'"></div>';
+	    	 	list+='<div class="ziliao_mid1">'+data[i].title+'<p class="huise">被纪念人：'+data[i].jinian1.name+'   '+data[i].jinian2.name+'<br>馆号：'+data[i].id+'<br>创建人：<em class="green">'+data[i].creator+'</em></p></div>';
+	    	 	//list+='<div class="ziliao_right1"><a href="#" class="putong1">一级</a><br><a href="#" class="putong">普通馆</a></div>';
+				list+='</div>';
+    		 }else{
+	    	 	list+='<div class="ziliao'+clsName+'" data-index="'+data[i].id+'" data-title="'+data[i].title+'" data-creator="'+data[i].creator+'" onclick="openSingle(this)"><div class="ziliao_left1"><img src="'+imgPath+data[i].jinian1.img+'"></div>';
+	    	 	list+='<div class="ziliao_mid1">'+data[i].title+'<p class="huise">被纪念人：'+data[i].jinian1.name+'<br>馆号：'+data[i].id+'<br>创建人：<em class="green">'+data[i].creator+'</em></p></div>';
+	    	 	//list+='<div class="ziliao_right1"><a href="#" class="putong1">一级</a><br><a href="#" class="putong">普通馆</a></div>';
+				list+='</div>';  			
+    		 }
+
+    	}
+        $('#tagcontent0').html(list);
+        
+    }else {
+        api.alert({
+            msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+        });
+    }
+});
+}
+</script>           
+</body>
+</html>
